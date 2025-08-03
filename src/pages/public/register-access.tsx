@@ -93,7 +93,7 @@ export default function RegisterAccess() {
 
   const handleSubmit = async () => {
     try {
-      const response = await AccountService.findAccount({ field: "email", value: formFields.email });
+      const response = await AccountService.validateAccount({ field: "email", value: formFields.email });
 
       if (response) {
         toast.error(response.data.message);

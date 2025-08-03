@@ -13,23 +13,26 @@ interface CreateAccountProps {
   cnpj?: string;
 }
 
-interface FindAccountProps {
-  field: string;
-  value: string;
-}
-
 class AccountService {
   static async createAccount(body: CreateAccountProps): Promise<AxiosResponse> {
     const response = await api.post(AppRoutes.ACCOUNT, body);
     return response;
   }
 
-  static async findAccount({
+  static async getAccount(): Promise<AxiosResponse> {
+    const response = await api.get(AppRoutes.ACCOUNT);
+    return response;
+  }
+
+  static async validateAccount({
     field,
     value,
-  }: FindAccountProps): Promise<AxiosResponse> {
+  }: {
+    field: string;
+    value: string;
+  }): Promise<AxiosResponse> {
     const response = await api.get(
-      `${AppRoutes.ACCOUNT}?field=${field}&value=${value}`,
+      AppRoutes.ACCOUNT + `/validate?field=${field}&value=${value}`,
     );
     return response;
   }

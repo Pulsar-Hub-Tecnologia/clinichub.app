@@ -9,13 +9,13 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useLoading } from '@/context/loading-context';
-import { useUser } from '@/context/user-context';
 import ModalContainer from '..';
 import { useEffect, useState } from 'react';
 import { User } from '@/types/User';
 import { toast } from 'react-toastify';
 import DeleteUserModal from './delete';
 import { AxiosError } from 'axios';
+import { UserService } from '@/services/api/user.service';
 
 interface DetailUserModalProps {
   id: string;
@@ -30,15 +30,17 @@ export default function DetailUserModal({
   close,
   getData,
 }: DetailUserModalProps) {
-  const { user, getUser } = useUser();
   const { onLoading, offLoading } = useLoading();
-  const [data, setData] = useState<User>(user);
+  const [data, setData] = useState<User>({
+    name: "",
+    email: "",
+  });
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
   async function fetchUser() {
     await onLoading();
     try {
-      const { data } = await getUser(id);
+      const { data } = await UserService.getUser(id);
       setData(data);
     } catch (error) {
       if (error instanceof AxiosError) {

@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
     id: '',
     name: '',
     email: '',
-    role: 'MEMBER',
   });
 
   useEffect(() => {
@@ -70,7 +69,6 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
       id: '',
       name: '',
       email: '',
-      role: 'MEMBER',
     });
   };
 

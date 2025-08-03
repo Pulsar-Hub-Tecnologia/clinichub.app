@@ -14,22 +14,19 @@ import { Label } from '@/components/ui/label';
 import { User } from '@/types/User';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useUser } from '@/context/user-context';
+import AccountService from '@/services/api/account.service';
 
 export default function Account() {
-
-  const { getAccount } = useUser();
   const { onLoading, offLoading } = useLoading();
   const [data, setData] = useState<User>({
     name: '',
     email: '',
-    role: '',
   });
 
   async function fetchAccount() {
     await onLoading();
     try {
-      const { data } = await getAccount();
+      const { data } = await AccountService.getAccount();
       setData(data);
     } catch (error) {
       if (error instanceof AxiosError) {

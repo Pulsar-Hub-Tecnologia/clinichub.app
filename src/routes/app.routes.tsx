@@ -8,14 +8,14 @@ import { AppSidebar } from '@/components/app-sidebar/app-sidebar.tsx';
 import ForgotPassword from '@/pages/public/forgot-password.tsx';
 import RecoverPassword from '@/pages/public/recover-password.tsx';
 import Account from '@/pages/private/account.tsx';
-import { useAuth } from '@/context/auth-context.tsx';
+// import { useAuth } from '@/context/auth-context.tsx';
 import RegisterAccess from '@/pages/public/register-access.tsx';
 import RegisterInfo from '@/pages/public/register-info.tsx';
 import ValidateEmail from '@/pages/public/validate-email.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   const pages = [
     {
@@ -39,7 +39,6 @@ export const AppRoute = () => {
           <Route path={'/*'} element={<Login />} />
 
           {pages
-            .filter((e) => e.allowedRoles.includes(user!.role))
             .map((e) => (
               <Route
                 key={e.path}

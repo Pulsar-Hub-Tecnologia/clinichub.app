@@ -1,4 +1,3 @@
-import { useUser } from '@/context/user-context';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -39,6 +38,7 @@ import DeleteUserModal from '@/components/modal/user/delete';
 import { formatDate } from '@/utils/formats';
 import { AxiosError } from 'axios';
 import CreateUserModal from '@/components/modal/user/create';
+import { UserService } from '@/services/api/user.service';
 
 export default function Users() {
   const { onLoading, offLoading } = useLoading();
@@ -54,7 +54,6 @@ export default function Users() {
   const [deleteId, setDeleteId] = useState<string>('');
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const { getUsers } = useUser();
 
   function controlCreateModal() {
     setCreateModal(!createModal);
@@ -85,7 +84,7 @@ export default function Users() {
   async function fetchUsers() {
     await onLoading();
     try {
-      const { data } = await getUsers();
+      const { data } = await UserService.getUsers();
       setData(data);
     } catch (error) {
       if (error instanceof AxiosError) {

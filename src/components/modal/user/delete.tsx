@@ -8,11 +8,11 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'react-toastify';
-import { useUser } from '@/context/user-context';
 import { useLoading } from '@/context/loading-context';
 import ModalContainer from '..';
 import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
+import { UserService } from '@/services/api/user.service';
 
 interface DeleteUserModalProps {
   id: string;
@@ -25,13 +25,17 @@ interface DeleteUser {
   name: string;
 }
 
+const user = {
+  name: '',
+  email: ''
+}
+
 export default function DeleteUserModal({
   open,
   close,
   id,
   getData,
 }: DeleteUserModalProps) {
-  const { user, getUser, deleteUser } = useUser();
   const { onLoading, offLoading } = useLoading();
   const [data, setData] = useState<DeleteUser>(user);
 
@@ -39,7 +43,7 @@ export default function DeleteUserModal({
   async function fetchUser() {
     await onLoading();
     try {
-      const { data } = await getUser(id);
+      const { data } = await UserService.getUser(id);
       setData(data);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -66,7 +70,7 @@ export default function DeleteUserModal({
     e.preventDefault();
     await onLoading();
     try {
-      const response = await deleteUser(id);
+      const response = await UserService.deleteUser(id);
       if (response.status === 204) {
         toast.success('Usuário removido com sucesso.');
         getData();

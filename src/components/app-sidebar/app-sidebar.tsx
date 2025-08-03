@@ -142,8 +142,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuth()
 
   const filteredNavMain = data.navMain.filter((item) => {
-    if (user?.role === "ADMIN") return true
-    return item.title !== "Settings" && item.title !== "Models"
+    console.log(item)
+    // if (user?.role === "ADMIN") return true
+    // return item.title !== "Settings" && item.title !== "Models"
   })
 
   return (

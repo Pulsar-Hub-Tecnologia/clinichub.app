@@ -10,9 +10,9 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
 import { useTheme } from '@/context/theme-context';
+import AuthService from '@/services/api/auth.service';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -40,7 +40,7 @@ export default function RecoverPassword() {
       } else if (data.password !== data.confirm_password) {
         toast.warn('As senhas não coincidem');
       } else {
-        const response = await recoverPassword({ ...data, email: email!, token: token! });
+        const response = await AuthService.recoverPassword({ ...data, email: email!, token: token! });
         console.log(response);
         if (response.status === 200) {
           await toast.success(response.data.message);

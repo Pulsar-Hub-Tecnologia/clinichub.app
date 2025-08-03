@@ -7,13 +7,13 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useLoading } from '@/context/loading-context';
-import { useUser } from '@/context/user-context';
 import ModalContainer from '..';
 import { useEffect, useState } from 'react';
 import { User } from '@/types/User';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import FormUser from './form/form';
+import { UserService } from '@/services/api/user.service';
 
 interface CreateUserModalProps {
   open: boolean;
@@ -21,12 +21,16 @@ interface CreateUserModalProps {
   getData: () => void;
 }
 
+const user = {
+  name: '',
+  email: ''
+}
+
 export default function CreateUserModal({
   open,
   close,
   getData,
 }: CreateUserModalProps) {
-  const { user, createUser } = useUser();
   const { onLoading, offLoading } = useLoading();
   const [data, setData] = useState<User>(user);
 
@@ -35,7 +39,7 @@ export default function CreateUserModal({
 
     await onLoading();
     try {
-      const response = await createUser(data);
+      const response = await UserService.createUser(data);
       if (response.status === 201) {
         toast.success('Usuário criado com sucesso');
         await getData();

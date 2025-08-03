@@ -3,7 +3,7 @@
 export interface User {
   id?:string;
   name: string;
-  role: string;
+  // role: string;
   email: string;
   password?: string;
   token?: string
