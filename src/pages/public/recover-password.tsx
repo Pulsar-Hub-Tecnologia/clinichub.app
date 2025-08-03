@@ -20,7 +20,7 @@ import { toast } from 'react-toastify';
 
 export default function RecoverPassword() {
   const { onLoading, offLoading } = useLoading();
-  const { recoverPassword } = useAuth();
+
   const navigate = useNavigate();
   const { email, token } = useParams()
   const { logo } = useTheme()

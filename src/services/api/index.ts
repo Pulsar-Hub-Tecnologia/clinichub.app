@@ -3,12 +3,12 @@ import Cookies from 'js-cookie';
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
-export const API = axios.create({
+export const api = axios.create({ //api é uma variável, não uma classe, ela deve ser cammelCase
   baseURL: baseURL,
   timeout: 10000
 });
 
-API.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('clinic_token');
     if (token) {
@@ -21,7 +21,7 @@ API.interceptors.request.use(
   },
 );
 
-API.interceptors.response.use(
+api.interceptors.response.use(
   (response) => {
     return response;
   },

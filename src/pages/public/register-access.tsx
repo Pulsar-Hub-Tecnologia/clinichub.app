@@ -13,9 +13,9 @@ import PasswordInput from '@/components/password-input/password-input';
 import BasicInput from '@/components/basic-input/basic-input';
 import { useNavigate } from 'react-router-dom';
 import AnimatedComponent from '@/components/animated-component';
-import FindAccount from '@/services/api/account/findAccount';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import AccountService from '@/services/api/account.service';
 
 interface FormFields {
   user_type: "PERSONAL" | "BUSINESS";
@@ -93,10 +93,10 @@ export default function RegisterAccess() {
 
   const handleSubmit = async () => {
     try {
-      const account_exists = await FindAccount({ field: "email", value: formFields.email });
+      const response = await AccountService.findAccount({ field: "email", value: formFields.email });
 
-      if (account_exists) {
-        toast.error(account_exists.message);
+      if (response) {
+        toast.error(response.data.message);
         return;
       }
 
@@ -105,7 +105,6 @@ export default function RegisterAccess() {
       if (error instanceof AxiosError) {
         return toast.error(error.response?.data.message)
       }
-
       toast.error("Parece que estamos enfrentando problemas técnicos. Tente novamente mais tarde!")
     }
   };

@@ -1,0 +1,38 @@
+import { AxiosResponse } from 'axios';
+import { api } from '.';
+import { AppRoutes } from './config/enum';
+
+interface CreateAccountProps {
+  workspace_type: 'PERSONAL' | 'BUSINESS';
+  email: string;
+  password: string;
+  name: string;
+  cpf: string;
+  crm_number?: string;
+  workspace_name?: string;
+  cnpj?: string;
+}
+
+interface FindAccountProps {
+  field: string;
+  value: string;
+}
+
+class AccountService {
+  static async createAccount(body: CreateAccountProps): Promise<AxiosResponse> {
+    const response = await api.post(AppRoutes.ACCOUNT, body);
+    return response;
+  }
+
+  static async findAccount({
+    field,
+    value,
+  }: FindAccountProps): Promise<AxiosResponse> {
+    const response = await api.get(
+      `${AppRoutes.ACCOUNT}?field=${field}&value=${value}`,
+    );
+    return response;
+  }
+}
+
+export default AccountService;

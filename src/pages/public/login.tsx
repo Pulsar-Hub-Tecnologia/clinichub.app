@@ -16,6 +16,7 @@ import { LogIn, Mail, Lock } from 'lucide-react';
 import ImageCarousel from '@/components/carousel/carousel';
 import { emailValidator } from '@/utils/valid';
 import { Card } from '@/components/ui/card';
+import AuthService from '@/services/api/auth.service';
 
 interface FormFields {
   email: string;
@@ -29,9 +30,9 @@ const defaultFormFields: FormFields = {
 }
 
 export default function Login() {
-  
+
   const { onLoading, offLoading } = useLoading();
-  const { login, signIn } = useAuth();
+  const { signIn } = useAuth();
   const [data, setData] = useState(defaultFormFields);
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
@@ -56,7 +57,7 @@ export default function Login() {
         setEmailError('Preencha o e-mail corretamente');
       } else {
         const { email, password } = data;
-        const response = await login(email, password);
+        const response = await AuthService.login(email, password);
         console.log(response);
         if (response.status === 200) {
           await signIn(response.data);
@@ -79,7 +80,7 @@ export default function Login() {
   const disabled = data.email === '' || data.password === '' || emailError !== undefined;
 
   return (
-    
+
   <section>
     <div className="flex w-full min-h-dvh">
       <Card className='flex flex-col justify-center  lg:w-1/3 px-6 py-4 lg:px-14 space-y-5 xl:space-y-4 2xl:space-y-6'>
@@ -134,7 +135,7 @@ export default function Login() {
                 required
                 onChange={(e) => setUser('password', e.target.value)}
                 leftIcon={
-                <Lock 
+                <Lock
                 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 }
               />
@@ -149,7 +150,7 @@ export default function Login() {
                 >
                 <LogIn className="h-5 w-5" />
                 Entrar
-                
+
               </Button>
               <Label
                 className="text-center block text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

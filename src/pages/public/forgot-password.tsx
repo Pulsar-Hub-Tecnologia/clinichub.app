@@ -1,15 +1,6 @@
 import ImageCarousel from '@/components/carousel/carousel';
 import { ModeToggle } from '@/components/mode-toggle/mode-toggle';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
@@ -119,7 +110,7 @@ export default function ForgotPassword() {
                 required
                 onChange={(e) => setUser('password', e.target.value)}
                 leftIcon={
-                <Lock 
+                <Lock
                 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 }
               />
@@ -134,7 +125,7 @@ export default function ForgotPassword() {
                 >
                 <LogIn className="h-5 w-5" />
                 Entrar
-                
+
               </Button>
               <Label
                 className="text-center block text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
