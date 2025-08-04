@@ -123,14 +123,14 @@ export default function ForgotPassword() {
                         <div className="flex items-center space-x-4">
                             <a
                               href="tel:+551112345678"
-                              className="text-sm text-primary hover:underline transition-colors cursor-pointer font-medium"
+                              className="flex text-sm text-primary hover:underline transition-colors cursor-pointer font-medium"
                             >
                               <Phone className="inline-block mr-1" />
                               +55 11 1234-5678
                             </a>
                             <a
                               href="mailto:suporte@clinichub.com.br"
-                              className="text-sm text-primary hover:underline transition-colors cursor-pointer font-medium"
+                              className="flex text-sm text-primary hover:underline transition-colors cursor-pointer font-medium"
                             >
                               <Mail className="inline-block mr-1" />
                               suporte@clinichub.com.br

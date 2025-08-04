@@ -6,7 +6,7 @@ import ClinicHUbLoginImage1 from "@/assets/routes/public/clinicHubLoginImage1.pn
 import ClinicHUbLoginImage2 from "@/assets/routes/public/clinicHubLoginImage2.png";
 import ClinicHubLoginImage3 from "@/assets/routes/public/clinicHubLoginImage3.png";
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/auth-context';
+import { useAuthAdmin } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
@@ -32,7 +32,7 @@ const defaultFormFields: FormFields = {
 export default function Login() {
 
   const { onLoading, offLoading } = useLoading();
-  const { signIn } = useAuth();
+  const { signIn } = useAuthAdmin();
   const [data, setData] = useState(defaultFormFields);
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
@@ -61,7 +61,16 @@ export default function Login() {
         console.log(response);
         if (response.status === 200) {
           await signIn(response.data);
-          await navigate(`/account`);
+          if (response.data.accesses.length === 1) {
+            await navigate(`/dashboard`);
+          }
+          else if (response.data.accesses.length > 1) {
+            await navigate(`/workspaces`);
+          } else {
+            // await navigate(``);
+            // Criar tela de erro de clinica não encontrada
+            toast.error('Você não possui acesso a nenhuma clínica.');
+          }
         }
       }
     } catch (error) {
@@ -156,7 +165,7 @@ export default function Login() {
                 className="text-center block text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
                 Não tem uma conta?
-                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => {}}>Cadastre-se gartuitamente</span>
+                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => navigate('/register-access')}>Cadastre-se gartuitamente</span>
               </Label>
             </form>
         </AnimatedComponent>

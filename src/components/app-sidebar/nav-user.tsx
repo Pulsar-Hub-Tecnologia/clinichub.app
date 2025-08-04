@@ -30,7 +30,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "@/context/auth-context"
+import { useAuthAdmin } from "@/context/auth-context"
 
 export function NavUser({
   user,
@@ -41,9 +41,9 @@ export function NavUser({
     avatar?: string
   }
 }) {
-  const { isMobile } = useSidebar()
-  const navigate = useNavigate()
-  const { signOut } = useAuth()
+  const { isMobile } = useSidebar();
+  const navigate = useNavigate();
+  const { signOut } = useAuthAdmin();
 
   return (
     <SidebarMenu>

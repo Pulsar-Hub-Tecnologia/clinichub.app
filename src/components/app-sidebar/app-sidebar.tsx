@@ -1,15 +1,6 @@
 "use client"
 
 import * as React from "react"
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  GalleryVerticalEnd,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
 
 
 import {
@@ -19,141 +10,187 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { TeamSwitcher } from "./team-switcher"
+import { WorkspacesSwitcher } from "./workspace-switcher"
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
-import { useAuth } from "@/context/auth-context"
+import { Access, useAuthAdmin } from "@/context/auth-context"
+import { BookOpen, Bot, Settings2, SquareTerminal } from "lucide-react"
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
+const dataAdmin = {
   navMain: [
     {
-      title: "Playground",
+      title: "Dashboard",
+      url: "#",
+      icon: SquareTerminal,
+      isActive: true
+    },
+    {
+      title: "Pacientes",
+      url: "#",
+      icon: Bot
+    },
+    {
+      title: "Profissionais",
+      url: "#",
+      icon: Bot
+    },
+    {
+      title: "Consultas",
+      url: "#",
+      icon: BookOpen
+    },
+    {
+      title: "Financeiro",
+      url: "#",
+      icon: Settings2,
+    },
+    {
+      title: "Configurações",
+      url: "#",
+      icon: Settings2,
+    },
+  ],
+}
+
+const dataAdminProfissional = {
+  navMain: [
+    {
+      title: "Dashboard",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Meu painel",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Geral",
           url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
+        }
       ],
     },
     {
-      title: "Models",
+      title: "Pacientes",
       url: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
+          title: "Meus pacientes",
           url: "#",
         },
         {
-          title: "Explorer",
+          title: "Geral",
           url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
+        }
       ],
     },
     {
-      title: "Documentation",
+      title: "Consultas",
       url: "#",
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
+          title: "Minhas consultas",
           url: "#",
         },
         {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
+          title: "Geral",
           url: "#",
         },
       ],
     },
     {
-      title: "Settings",
+      title: "Profissionais",
       url: "#",
       icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+    },
+    {
+      title: "Financeiro",
+      url: "#",
+      icon: Settings2,
+    },
+    {
+      title: "Configurações",
+      url: "#",
+      icon: Settings2,
     },
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+const dataProfissional = {
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "#",
+      icon: SquareTerminal,
+      isActive: true
+    },
+    {
+      title: "Pacientes",
+      url: "#",
+      icon: Bot
+    },
+    {
+      title: "Consultas",
+      url: "#",
+      icon: BookOpen
+    },
+    {
+      title: "Financeiro",
+      url: "#",
+      icon: Settings2,
+    },
+    {
+      title: "Configurações",
+      url: "#",
+      icon: Settings2,
+    },
+  ],
+}
 
-  const { user } = useAuth()
+const dataPaciente = {
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "#",
+      icon: SquareTerminal
+    },
+    {
+      title: "Consultas",
+      url: "#",
+      icon: BookOpen
+    },
+    {
+      title: "Autoavaliações",
+      url: "#",
+      icon: Settings2,
+    },
+    {
+      title: "Diários",
+      url: "#",
+      icon: Settings2,
+    },
+    {
+      title: "Configurações",
+      url: "#",
+      icon: Settings2,
+    },
+  ],
+}
 
-  const filteredNavMain = data.navMain.filter((item) => {
-    console.log(item)
-    // if (user?.role === "ADMIN") return true
-    // return item.title !== "Settings" && item.title !== "Models"
-  })
+
+export function AppSidebar({ role, access, ...props }: React.ComponentProps<typeof Sidebar> & { role?: string, access?: Access }) {
+  const { user } = useAuthAdmin();
+  const data = role === 'ADMIN' ? dataAdmin : role === 'HYBRID' ? dataAdminProfissional : role === 'PROFFESSIONAL' ? dataProfissional : dataPaciente;
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <WorkspacesSwitcher workspaceSelecionado={access} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={filteredNavMain} />
+        <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user!} />
