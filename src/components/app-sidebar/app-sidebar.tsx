@@ -14,35 +14,35 @@ import { WorkspacesSwitcher } from "./workspace-switcher"
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 import { Access, useAuthAdmin } from "@/context/auth-context"
-import { BookOpen, Bot, Settings2, SquareTerminal } from "lucide-react"
+import { BookOpenText, BookText, CalendarDays, ChartColumn, Settings2, Stethoscope, UsersRound, WalletMinimal } from "lucide-react"
 
 const dataAdmin = {
   navMain: [
     {
       title: "Dashboard",
       url: "#",
-      icon: SquareTerminal,
+      icon: ChartColumn,
       isActive: true
     },
     {
       title: "Pacientes",
       url: "#",
-      icon: Bot
+      icon: UsersRound
     },
     {
       title: "Profissionais",
       url: "#",
-      icon: Bot
+      icon: Stethoscope
     },
     {
       title: "Consultas",
       url: "#",
-      icon: BookOpen
+      icon: CalendarDays
     },
     {
       title: "Financeiro",
       url: "#",
-      icon: Settings2,
+      icon: WalletMinimal,
     },
     {
       title: "Configurações",
@@ -57,7 +57,7 @@ const dataAdminProfissional = {
     {
       title: "Dashboard",
       url: "#",
-      icon: SquareTerminal,
+      icon: ChartColumn,
       isActive: true,
       items: [
         {
@@ -73,7 +73,7 @@ const dataAdminProfissional = {
     {
       title: "Pacientes",
       url: "#",
-      icon: Bot,
+      icon: UsersRound,
       items: [
         {
           title: "Meus pacientes",
@@ -88,7 +88,7 @@ const dataAdminProfissional = {
     {
       title: "Consultas",
       url: "#",
-      icon: BookOpen,
+      icon: CalendarDays,
       items: [
         {
           title: "Minhas consultas",
@@ -103,12 +103,12 @@ const dataAdminProfissional = {
     {
       title: "Profissionais",
       url: "#",
-      icon: Settings2,
+      icon: Stethoscope,
     },
     {
       title: "Financeiro",
       url: "#",
-      icon: Settings2,
+      icon: WalletMinimal,
     },
     {
       title: "Configurações",
@@ -123,23 +123,23 @@ const dataProfissional = {
     {
       title: "Dashboard",
       url: "#",
-      icon: SquareTerminal,
+      icon: ChartColumn,
       isActive: true
     },
     {
       title: "Pacientes",
       url: "#",
-      icon: Bot
+      icon: UsersRound
     },
     {
       title: "Consultas",
       url: "#",
-      icon: BookOpen
+      icon: CalendarDays
     },
     {
       title: "Financeiro",
       url: "#",
-      icon: Settings2,
+      icon: WalletMinimal,
     },
     {
       title: "Configurações",
@@ -154,22 +154,22 @@ const dataPaciente = {
     {
       title: "Dashboard",
       url: "#",
-      icon: SquareTerminal
+      icon: ChartColumn
     },
     {
       title: "Consultas",
       url: "#",
-      icon: BookOpen
+      icon: CalendarDays
     },
     {
       title: "Autoavaliações",
       url: "#",
-      icon: Settings2,
+      icon: BookText,
     },
     {
       title: "Diários",
       url: "#",
-      icon: Settings2,
+      icon: BookOpenText,
     },
     {
       title: "Configurações",
