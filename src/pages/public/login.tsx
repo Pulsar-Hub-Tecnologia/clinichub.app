@@ -53,7 +53,7 @@ export default function Login() {
       e.preventDefault();
       if (data.email === '' || data.password === '') {
         toast.warn('Preencha as credenciais corretamnete');
-      } else if (emailValidator(data.email)) {
+      } else if (!emailValidator(data.email)) {
         setEmailError('Preencha o e-mail corretamente');
       } else {
         const { email, password } = data;
