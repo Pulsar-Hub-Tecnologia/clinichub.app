@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Building, IdCard, Newspaper, User, UserPlus } from 'lucide-react';
 
-import ClinicHubLogo from '@/assets/routes/public/clinicHubLogo.png';
+import ClinicHubLogo from '../../../public/clinicHubLogo.png';
 import AnimatedComponent from '@/components/animated-component';
 import BasicInput from '@/components/basic-input/basic-input';
 import { Button } from '@/components/ui/button';

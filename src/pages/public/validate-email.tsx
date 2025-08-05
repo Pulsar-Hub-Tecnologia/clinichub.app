@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 // import { toast } from 'react-toastify';
 import { MailOpen, Send, SquarePen } from 'lucide-react';
 
-import ClinicHubLogo from "@/assets/routes/public/clinicHubLogo.png"
+import ClinicHubLogo from "../../../public/clinicHubLogo.png"
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import AnimatedComponent from '@/components/animated-component';
