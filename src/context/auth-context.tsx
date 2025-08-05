@@ -6,23 +6,38 @@ import {
   ReactNode,
 } from 'react';
 import Cookies from 'js-cookie';
-import { User } from '../types/User';
 import { decryptData, encryptData } from '@/utils/encrypt';
 import { api } from '@/services/api';
 
+export interface Access {
+  picture: string;
+  workspace_id: string;
+  type: string;
+  name: string;
+  role: string;
+}
+
+interface AuthUser {
+  email: string;
+  name: string;
+  avatar?: string;
+}
+
 interface AuthContextInterface {
+  accesses: Access[];
+  user: AuthUser | undefined;
+  workspace?: Access;
   token: string;
-  signIn: (user: User) => void;
-  signWorkspace: (workspace_id: string) => Promise<void>;
-  user: User | undefined;
+  signIn: (data: { accesses: Access[]; user: AuthUser; token: string }) => void;
   signOut: () => void;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  setUser: React.Dispatch<React.SetStateAction<AuthUser | undefined>>;
+  signWorkspace: (workspace: Access) => Promise<void>;
+  api: typeof api;
   headers: {
     headers: {
       workspace_id: string;
     };
   };
-  api: typeof api;
 }
 
 const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
@@ -33,67 +48,71 @@ interface AuthProviderInterface {
 
 export const AuthProvider = ({ children }: AuthProviderInterface) => {
   const [token, setToken] = useState('');
-  const [workspaceId, setWorkspaceId] = useState('');
-  const [user, setUser] = useState<User>({
-    id: '',
-    name: '',
-    email: '',
-  });
+  const [accesses, setAccesses] = useState<Access[]>([]);
+  const [workspace, setWorkspace] = useState<Access>();
+  const [user, setUser] = useState<AuthUser | undefined>(undefined);
 
   useEffect(() => {
-    const cookieUser = Cookies.get('clinic_user');
+    const authCookie = Cookies.get('clinic_auth') as string;
+    const { user, accesses } = authCookie ? decryptData(authCookie) : { user: undefined, accesses: [] };
     const cookieToken = Cookies.get('clinic_token') as string;
-    const cookieWorkspace = Cookies.get('clinic_workspace_id') as string;
-    if (cookieUser && cookieToken) {
-      const parsedUser: User = decryptData(cookieUser);
-      setUser(parsedUser);
-      setToken(cookieToken); // supondo que o token está dentro de user
-      setWorkspaceId(cookieWorkspace); // supondo que o token está dentro de user
+    const cookieWorkspace = Cookies.get('clinic_workspace')
+      ? decryptData(Cookies.get('clinic_workspace') as string)
+      : undefined;
+    //Validar se o usuário possui workspace, se não tiver, redirecionar para a página de workspaces
+    // if (!cookieWorkspace) {
+    //   window.location.href = '/tela-de-seleção-de-workspace/clinicas';
+    //   return;
+    // }
+    if (user && accesses && cookieToken) {
+      setUser(user);
+      setAccesses(accesses);
+      setToken(cookieToken);
+      setWorkspace(cookieWorkspace);
     }
   }, []);
 
-  const signIn = async (user: User) => {
-    setToken(user.token!);
+  const signIn = (data: { accesses: Access[]; user: AuthUser; token: string }) => {
+    const { accesses, user, token } = data;
+    setToken(token);
     setUser(user);
-    Cookies.set('clinic_user', encryptData(user), { expires: 7 }); // persiste por 7 dias
-    Cookies.set('clinic_token', user.token!, { expires: 7 }); // persiste por 7 dias
+    setAccesses(accesses);
+    Cookies.set('clinic_token', token, { expires: 7 });
+    Cookies.set('clinic_auth', encryptData({accesses, user}), { expires: 7 });
   };
 
   const signOut = () => {
-    Cookies.remove('clinic_token'); // persiste por 7 dias
-    Cookies.remove('clinic_user'); // persiste por 7 dias
-    Cookies.remove('clinic_workspace_id'); // persiste por 7 dias
+    Cookies.remove('clinic_auth');
+    Cookies.remove('clinic_workspace');
     setToken('');
-    setWorkspaceId('');
-    setUser({
-      id: '',
-      name: '',
-      email: '',
-    });
+    setUser(undefined);
+    setAccesses([]);
+    setWorkspace(undefined);
   };
 
   const headers = {
     headers: {
-      workspace_id: workspaceId,
+      workspace_id: workspace?.workspace_id ?? '',
     },
   };
 
-  async function signWorkspace(workspace_id: string) {
-    setWorkspaceId(workspace_id);
-    Cookies.set('clinic_workspace_id', workspace_id, { expires: 7 }); // persiste por 7 dias
+  async function signWorkspace(workspace: Access) {
+    setWorkspace(workspace);
+    Cookies.set('clinic_workspace', JSON.stringify(workspace), { expires: 7 });
   }
 
   return (
     <AuthContext.Provider
       value={{
+        accesses,
+        user,
         token,
-        headers,
         signIn,
         signOut,
-        user,
         setUser,
         api,
         signWorkspace,
+        headers,
       }}
     >
       {children}
@@ -103,7 +122,7 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
 
 export default AuthContext;
 
-export const useAuth = () => {
+export const useAuthAdmin = () => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
