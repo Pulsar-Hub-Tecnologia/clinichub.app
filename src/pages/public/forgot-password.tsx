@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ClinicHubLogo from "@/assets/routes/public/clinicHubLogo.png"
-import ClinicHubLoginImage1 from "@/assets/routes/public/clinicHubLoginImage1.png";
+import ClinicHubLoginImage1 from "@assets/routes/public/clinicHubLoginImage1.png";
 import ClinicHubLoginImage2 from "@/assets/routes/public/clinicHubLoginImage2.png";
 import ClinicHubLoginImage3 from "@/assets/routes/public/clinicHubLoginImage3.png";
 import AnimatedComponent from '@/components/animated-component';
@@ -42,7 +42,7 @@ export default function ForgotPassword() {
     })
     .finally(async () => {
       await offLoading();
-    })}; 
+    })};
   };
 
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
@@ -98,7 +98,7 @@ export default function ForgotPassword() {
                 autoComplete="email"
                 required
               />
-        
+
 
 
               <Button
@@ -108,7 +108,7 @@ export default function ForgotPassword() {
                 >
                 <Send className="h-5 w-5" />
                 Enviar instruções
-                
+
               </Button>
               <div id="help-section" className="mt-8 p-6 bg-gray-50 rounded-xl">
                 <div className="flex items-start">
