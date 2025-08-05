@@ -5,10 +5,10 @@ import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import ClinicHubLogo from "@/assets/routes/public/clinicHubLogo.png"
-import ClinicHubLoginImage1 from "@assets/routes/public/clinicHubLoginImage1.png";
-import ClinicHubLoginImage2 from "@/assets/routes/public/clinicHubLoginImage2.png";
-import ClinicHubLoginImage3 from "@/assets/routes/public/clinicHubLoginImage3.png";
+import ClinicHubLogo from "../../../public/clinicHubLogo.png"
+import ClinicHubLoginImage1 from "../../../public/clinicHubLoginImage1.png";
+import ClinicHubLoginImage2 from "../../../public/clinicHubLoginImage2.png";
+import ClinicHubLoginImage3 from "../../../public/clinicHubLoginImage3.png";
 import AnimatedComponent from '@/components/animated-component';
 import BasicInput from '@/components/basic-input/basic-input';
 import { Mail, Phone, Send, ArrowLeft } from 'lucide-react';
