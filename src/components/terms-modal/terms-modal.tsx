@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import ClinicHubLogo from "../../../public/clinicHubLogo.png"
+import ClinicHubLogo from "/logo.png"
 import { BookA, Info, Mail, RefreshCcw, Scale, ShieldPlus, TriangleAlert, UserCheck } from 'lucide-react';
 
 interface TermsOfUseModalProps {
