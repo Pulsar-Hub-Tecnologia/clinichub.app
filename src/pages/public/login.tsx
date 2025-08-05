@@ -1,10 +1,10 @@
 import AnimatedComponent from '@/components/animated-component';
 import BasicInput from '@/components/basic-input/basic-input';
 import { Button } from '@/components/ui/button';
-import ClinicHubLogo from "../../../public/clinicHubLogo.png"
-import ClinicHubLoginImage1 from "../../../public/clinicHubLoginImage1.png";
-import ClinicHubLoginImage2 from "../../../public/clinicHubLoginImage2.png";
-import ClinicHubLoginImage3 from "../../../public/clinicHubLoginImage3.png";
+import ClinicHubLogo from "/logo.png"
+import ClinicHubLoginImage1 from "/carrosel/image1.png";
+import ClinicHubLoginImage2 from "/carrosel/image2.png";
+import ClinicHubLoginImage3 from "/carrosel/image3.png";
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
 import { useLoading } from '@/context/loading-context';

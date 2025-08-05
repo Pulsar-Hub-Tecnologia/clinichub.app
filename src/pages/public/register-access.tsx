@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-import ClinicHubLogo from "../../../public/clinicHubLogo.png";
+import ClinicHubLogo from "/logo.png";
 import IndividualProfessional from "@/assets/routes/public/register/profissional_individual.svg";
 import ClinicADM from "@/assets/routes/public/register/adm_clinica.svg";
 import TermsModal from '@/components/terms-modal/terms-modal';
