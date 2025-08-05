@@ -1,27 +1,27 @@
-import { toast } from 'react-toastify';
-import { useLoading } from '@/context/loading-context';
-import { AxiosError } from 'axios';
+// import { toast } from 'react-toastify';
+// import { useLoading } from '@/context/loading-context';
+// import { AxiosError } from 'axios';
 
 
 
 export default function Workspaces() {
 
-  const { onLoading, offLoading } = useLoading();
+  // const { onLoading, offLoading } = useLoading();
 
-  async function selectWorkspaces() {
-    await onLoading();
-    try {
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        console.error(error);
-        return toast.error(
-          error.response?.data?.message || 'Algo deu errado, tente novamente.',
-        );
-      }
-    } finally {
-      await offLoading();
-    }
-  }
+  // async function selectWorkspaces() {
+  //   await onLoading();
+  //   try {
+  //   } catch (error) {
+  //     if (error instanceof AxiosError) {
+  //       console.error(error);
+  //       return toast.error(
+  //         error.response?.data?.message || 'Algo deu errado, tente novamente.',
+  //       );
+  //     }
+  //   } finally {
+  //     await offLoading();
+  //   }
+  // }
 
   return (
     <>
