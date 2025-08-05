@@ -6,8 +6,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ClinicHubLogo from "@/assets/routes/public/clinicHubLogo.png"
-import ClinicHUbLoginImage1 from "@/assets/routes/public/clinicHubLoginImage1.png";
-import ClinicHUbLoginImage2 from "@/assets/routes/public/clinicHubLoginImage2.png";
+import ClinicHubLoginImage1 from "@/assets/routes/public/clinicHubLoginImage1.png";
+import ClinicHubLoginImage2 from "@/assets/routes/public/clinicHubLoginImage2.png";
 import ClinicHubLoginImage3 from "@/assets/routes/public/clinicHubLoginImage3.png";
 import AnimatedComponent from '@/components/animated-component';
 import BasicInput from '@/components/basic-input/basic-input';
@@ -152,8 +152,8 @@ export default function ForgotPassword() {
         <div className='absolute min-h top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 z-20'>
             <ImageCarousel
           images={[
-            ClinicHUbLoginImage1,
-            ClinicHUbLoginImage2,
+            ClinicHubLoginImage1,
+            ClinicHubLoginImage2,
             ClinicHubLoginImage3,
           ]}
         />
