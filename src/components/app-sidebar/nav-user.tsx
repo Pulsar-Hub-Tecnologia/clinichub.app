@@ -2,11 +2,8 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from "lucide-react"
 
 import {
@@ -30,7 +27,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "@/context/auth-context"
+import { useAuthAdmin } from "@/context/auth-context"
 
 export function NavUser({
   user,
@@ -41,9 +38,9 @@ export function NavUser({
     avatar?: string
   }
 }) {
-  const { isMobile } = useSidebar()
-  const navigate = useNavigate()
-  const { signOut } = useAuth()
+  const { isMobile } = useSidebar();
+  const navigate = useNavigate();
+  const { signOut } = useAuthAdmin();
 
   return (
     <SidebarMenu>
@@ -84,25 +81,13 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                navigate("/configurations/profile");
+              }}>
                 <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+                Minha Conta
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -111,7 +96,7 @@ export function NavUser({
               navigate("/login")
             }}>
               <LogOut />
-              Log out
+              Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
