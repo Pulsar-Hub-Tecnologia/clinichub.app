@@ -17,6 +17,7 @@ import ImageCarousel from '@/components/carousel/carousel';
 import { emailValidator } from '@/utils/valid';
 import { Card } from '@/components/ui/card';
 import AuthService from '@/services/api/auth.service';
+import AccountService from '@/services/api/account.service';
 
 interface FormFields {
   email: string;
@@ -32,7 +33,7 @@ const defaultFormFields: FormFields = {
 export default function Login() {
 
   const { onLoading, offLoading } = useLoading();
-  const { signIn } = useAuthAdmin();
+  const { signIn, signInWithWorkspace, signWorkspace } = useAuthAdmin();
   const [data, setData] = useState(defaultFormFields);
   const [emailError, setEmailError] = useState<string | undefined>(undefined);
 
@@ -45,39 +46,53 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     await onLoading();
 
     try {
-      e.preventDefault();
-      if (data.email === '' || data.password === '') {
-        toast.warn('Preencha as credenciais corretamnete');
-      } else if (!emailValidator(data.email)) {
+      if (!data.email || !data.password) {
+        toast.warn('Preencha as credenciais corretamente');
+        return;
+      }
+      if (!emailValidator(data.email)) {
         setEmailError('Preencha o e-mail corretamente');
-      } else {
-        const { email, password } = data;
-        const response = await AuthService.login(email, password);
-        console.log(response);
-        if (response.status === 200) {
-          await signIn(response.data);
-          if (response.data.accesses.length === 1) {
-            await navigate(`/dashboard`);
-          }
-          else if (response.data.accesses.length > 1) {
-            await navigate(`/workspaces`);
-          } else {
-            // await navigate(``);
-            // Criar tela de erro de clinica não encontrada
-            toast.error('Você não possui acesso a nenhuma clínica.');
-          }
+        return;
+      }
+
+      const { email, password } = data;
+      const response = await AuthService.login(email, password);
+
+      if (response.status === 200) {
+        await signIn(response.data);
+
+        const accesses = response.data.accesses;
+        if (accesses.length === 1) {
+          AccountService.signWorkspace(accesses[0].workspace_id)
+            .then(() => {
+              signInWithWorkspace(response.data.workspace_token);
+              signWorkspace(accesses[0]);
+              navigate('/dashboard');
+            })
+            .catch((error) => {
+              if (error instanceof AxiosError) {
+                console.error(error);
+                toast.error(
+                  error.response?.data?.message || 'Algo deu errado, tente novamente.'
+                );
+              }
+            });
+        } else if (accesses.length > 1) {
+          navigate('/workspaces');
+        } else {
+          toast.error('Você não possui acesso a nenhuma clínica.');
         }
       }
     } catch (error) {
       if (error instanceof AxiosError) {
         console.error(error);
-        return toast.error(
-          error.response?.data?.message || 'Algo deu errado, tente novamente.',
+        toast.error(
+          error.response?.data?.message || 'Algo deu errado, tente novamente.'
         );
       }
     } finally {
@@ -190,3 +205,5 @@ export default function Login() {
   </section>
   );
 }
+
+

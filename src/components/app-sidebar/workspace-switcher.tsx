@@ -19,6 +19,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Access, useAuthAdmin } from "@/context/auth-context"
+import { mapAccessLevel } from "@/constants/auth-constants"
 
 export function WorkspacesSwitcher( { workspaceSelecionado }: { workspaceSelecionado: Access | undefined } ) {
   const { accesses } = useAuthAdmin();
@@ -38,17 +39,22 @@ export function WorkspacesSwitcher( { workspaceSelecionado }: { workspaceSelecio
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                {activeWorkspace.picture && (
-                    <img
-                      src={activeWorkspace.picture}
-                      alt={activeWorkspace.name}
-                      className="size-3.5 shrink-0 rounded"
-                    />
-                  )}
+              <div className="bg-background-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                {activeWorkspace.picture ? (
+                  <img
+                    src={activeWorkspace.picture}
+                    alt={activeWorkspace.name}
+                    className="size-3.5 shrink-0 rounded"
+                  />
+                ) : (
+                  <span className="size-3.5 shrink-0 rounded bg-muted flex items-center justify-center text-xs font-bold uppercase">
+                    {activeWorkspace.name.charAt(0)}
+                  </span>
+                )}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{activeWorkspace.name}</span>
+                <span className="truncate text-xs">{mapAccessLevel(activeWorkspace.role)}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -78,6 +84,9 @@ export function WorkspacesSwitcher( { workspaceSelecionado }: { workspaceSelecio
                   )}
                 </div>
                 {workspace.name}
+                <span className="text-xs text-muted-foreground">
+                  {mapAccessLevel(workspace.role)}
+                </span>
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}

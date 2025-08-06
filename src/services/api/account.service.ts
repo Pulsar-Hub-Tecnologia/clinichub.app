@@ -36,6 +36,11 @@ class AccountService {
     );
     return response;
   }
+
+  static async signWorkspace(workspace_id: string): Promise<AxiosResponse> {
+    const response = await api.post(AppRoutes.ACCOUNT + '/accesses/sign-workspace', workspace_id);
+    return response;
+  }
 }
 
 export default AccountService;

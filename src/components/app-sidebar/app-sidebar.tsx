@@ -180,9 +180,9 @@ const dataPaciente = {
 }
 
 
-export function AppSidebar({ role, access, ...props }: React.ComponentProps<typeof Sidebar> & { role?: string, access?: Access }) {
+export function AppSidebar({ access, ...props }: React.ComponentProps<typeof Sidebar> & { access?: Access }) {
   const { user } = useAuthAdmin();
-  const data = role === 'ADMIN' ? dataAdmin : role === 'HYBRID' ? dataAdminProfissional : role === 'PROFFESSIONAL' ? dataProfissional : dataPaciente;
+  const data = access?.role === 'ADMIN' || access?.role === 'OWNER' ? dataAdmin : access?.role === 'HYBRID' ? dataAdminProfissional : access?.role === 'PROFFESSIONAL' ? dataProfissional : dataPaciente;
 
   return (
     <Sidebar collapsible="icon" {...props}>

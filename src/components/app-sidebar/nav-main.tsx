@@ -38,7 +38,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>ClinicHub</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

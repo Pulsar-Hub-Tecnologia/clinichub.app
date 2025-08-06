@@ -32,6 +32,7 @@ interface AuthContextInterface {
   signOut: () => void;
   setUser: React.Dispatch<React.SetStateAction<AuthUser | undefined>>;
   signWorkspace: (workspace: Access) => Promise<void>;
+  signInWithWorkspace: (token: string) => void;
   api: typeof api;
   headers: {
     headers: {
@@ -56,9 +57,8 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
     const authCookie = Cookies.get('clinic_auth') as string;
     const { user, accesses } = authCookie ? decryptData(authCookie) : { user: undefined, accesses: [] };
     const cookieToken = Cookies.get('clinic_token') as string;
-    const cookieWorkspace = Cookies.get('clinic_workspace')
-      ? decryptData(Cookies.get('clinic_workspace') as string)
-      : undefined;
+    const cookieWorkspace = Cookies.get('clinic_workspace');
+    const workspace = cookieWorkspace ? JSON.parse(cookieWorkspace) : undefined;
     //Validar se o usuário possui workspace, se não tiver, redirecionar para a página de workspaces
     // if (!cookieWorkspace) {
     //   window.location.href = '/tela-de-seleção-de-workspace/clinicas';
@@ -68,7 +68,8 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
       setUser(user);
       setAccesses(accesses);
       setToken(cookieToken);
-      setWorkspace(cookieWorkspace);
+      setWorkspace(workspace);
+      console.log('AuthProvider: User and accesses set from cookies');
     }
   }, []);
 
@@ -79,6 +80,10 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
     setAccesses(accesses);
     Cookies.set('clinic_token', token, { expires: 7 });
     Cookies.set('clinic_auth', encryptData({accesses, user}), { expires: 7 });
+  };
+
+  const signInWithWorkspace = (token: string) => {
+    Cookies.set('clinic_workspace_token', token, { expires: 7 });
   };
 
   const signOut = () => {
@@ -107,12 +112,14 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
         accesses,
         user,
         token,
+        workspace,
         signIn,
         signOut,
         setUser,
         api,
         signWorkspace,
         headers,
+        signInWithWorkspace
       }}
     >
       {children}

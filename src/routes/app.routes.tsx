@@ -14,6 +14,7 @@ import RegisterInfo from '@/pages/public/register-info.tsx';
 import ValidateEmail from '@/pages/public/validate-email.tsx';
 import Dashboard from '@/pages/private/dashboard.tsx';
 import { Access, useAuthAdmin } from '@/context/auth-context.tsx';
+import Workspaces from '@/pages/private/workspaces.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -49,6 +50,7 @@ export const AppRoute = () => {
       <Router>
         <Routes>
           <Route path={'/login'} element={<Login />} />
+          <Route path={'/workspaces'} element={<Workspaces />} />
           <Route path={'/register-access'} element={<RegisterAccess />} />
           <Route path={'/register-info'} element={<RegisterInfo />} />
           <Route path={'/validate-email'} element={<ValidateEmail />} />
@@ -68,7 +70,7 @@ export const AppRoute = () => {
                       <SidebarProvider>
                         <AppSidebar 
                           side="left" 
-                          role={access.role}
+                          access={access}
                           />
                         <e.component />
                       </SidebarProvider>

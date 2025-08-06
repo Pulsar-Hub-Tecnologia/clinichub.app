@@ -1,37 +1,36 @@
-// import { toast } from 'react-toastify';
-// import { useLoading } from '@/context/loading-context';
-// import { AxiosError } from 'axios';
-
-
+import { ClinicCard } from "@/components/workspace/clinic-card";
+import { useAuthAdmin } from "@/context/auth-context";
 
 export default function Workspaces() {
+  const { accesses } = useAuthAdmin();
 
-  // const { onLoading, offLoading } = useLoading();
-
-  // async function selectWorkspaces() {
-  //   await onLoading();
-  //   try {
-  //   } catch (error) {
-  //     if (error instanceof AxiosError) {
-  //       console.error(error);
-  //       return toast.error(
-  //         error.response?.data?.message || 'Algo deu errado, tente novamente.',
-  //       );
-  //     }
-  //   } finally {
-  //     await offLoading();
-  //   }
-  // }
+  const isSingle = accesses.length === 1;
 
   return (
-    <>
-      <main className="">
-        <section className="flex flex-col gap-5 items-start justify-start py-5 px-10">
-          <div className="w-full">
-            <h1 className="text-2xl font-semibold">Workspaces</h1>
-          </div>
-        </section>
-      </main>
-    </>
+    <main className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-8">
+      <div className="max-w-2xl w-full text-center mb-8">
+        <h1 className="text-3xl font-bold mb-2">Selecione o workspace</h1>
+        <p className="text-base text-muted-foreground">
+          Escolha em qual clínica irá trabalhar
+        </p>
+      </div>
+      <section
+        className={`w-full max-w-5xl grid gap-8 ${
+          isSingle
+            ? "grid-cols-1 justify-center place-items-center"
+            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+        }`}
+      >
+        {accesses.map((workspace) => (
+          <ClinicCard
+            key={workspace.workspace_id}
+            name={workspace.name}
+            acesso={workspace.role}
+            type={workspace.type}
+            picture={workspace.picture}
+          />
+        ))}
+      </section>
+    </main>
   );
 }
