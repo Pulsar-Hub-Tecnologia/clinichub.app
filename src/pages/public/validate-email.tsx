@@ -2,12 +2,12 @@ import { useAuthAdmin } from "@/context/auth-context";
 import AccountService from "@/services/api/account.service";
 import AuthService from "@/services/api/auth.service";
 import { AxiosError } from "axios";
+import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify";
 
 export default function ValidateEmail() {
-  const location = useLocation()
   const navigate = useNavigate()
   const { token, email } = useParams();
   const { signIn, signWorkspace, signInWithWorkspace, } = useAuthAdmin()
@@ -48,10 +48,10 @@ export default function ValidateEmail() {
     })()
   }, [])
 
-  if (location.pathname !== "/validate-email") {
-
-  }
-
-
-  return <></>
+  return (
+    <div className="min-h-screen min-w-screen flex flex-col items-center justify-center">
+      <LoaderCircle className="animate-spin" />
+      <p>Validando seu email...</p>
+    </div>
+  )
 }

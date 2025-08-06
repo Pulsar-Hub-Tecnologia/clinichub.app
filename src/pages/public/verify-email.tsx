@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 // import { AxiosError } from 'axios';
 // import { useNavigate } from 'react-router-dom';
 // import { toast } from 'react-toastify';
-import { MailOpen, Send, SquarePen } from 'lucide-react';
+import { MailOpen, Send } from 'lucide-react';
 
 import ClinicHubLogo from "/logo.png"
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -122,7 +122,7 @@ export default function VerifyEmail() {
                 <Send className="h-5 w-5" />
                 {count > 0 ? `Reenviar em ${count} segundos` : "Reenviar e-mail de verificação"}
               </Button>
-              <Button
+              {/* <Button
                 variant={'outline'}
                 className="w-full py-6 text-lg bg-accent hover:bg-inherit flex items-center justify-center space-x-2"
                 disabled={false}
@@ -130,7 +130,7 @@ export default function VerifyEmail() {
               >
                 <SquarePen className="h-5 w-5" />
                 Alterar endereço de e-mail
-              </Button>
+              </Button> */}
             </div>
 
             <div className='flex flex-col gap-2 text-center text-sm'>
