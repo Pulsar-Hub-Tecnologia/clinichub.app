@@ -95,7 +95,7 @@ export default function RegisterInfo() {
       cnpj: formFields.cnpj,
     })
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           navigate('/verify-email', { state: formFields.email });
         }
       })
