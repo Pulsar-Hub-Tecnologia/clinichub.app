@@ -14,15 +14,22 @@ import { AppRoutes } from './config/enum';
 
 class AuthService {
   static async login(email: string, password: string) {
-    const response = await api.post(AppRoutes.AUTH + '/', { email, password });
+    const response = await api.post(AppRoutes.AUTH, { email, password });
     return response;
   }
+
+  static async validateEmail(token: string, email: string) {
+    const response = await api.post(AppRoutes.AUTH + "/validate-email", { token, email });
+    return response;
+  }
+
   static async forgotPassword(email: string) {
     const response = await api.post(AppRoutes.AUTH + '/forgot-password/', {
       email,
     });
     return response;
   }
+
   static async recoverPassword(data: RecoverPassword) {
     const response = await api.post(
       AppRoutes.AUTH + '/recover-password/',

@@ -11,10 +11,11 @@ import Account from '@/pages/private/account.tsx';
 // import { useAuth } from '@/context/auth-context.tsx';
 import RegisterAccess from '@/pages/public/register-access.tsx';
 import RegisterInfo from '@/pages/public/register-info.tsx';
-import ValidateEmail from '@/pages/public/validate-email.tsx';
+import ValidateEmail from '@/pages/public/verify-email.tsx';
 import Dashboard from '@/pages/private/dashboard.tsx';
 import { Access, useAuthAdmin } from '@/context/auth-context.tsx';
 import Workspaces from '@/pages/private/workspaces.tsx';
+import VerifyEmail from '@/pages/public/verify-email.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -53,6 +54,7 @@ export const AppRoute = () => {
           <Route path={'/workspaces'} element={<Workspaces />} />
           <Route path={'/register-access'} element={<RegisterAccess />} />
           <Route path={'/register-info'} element={<RegisterInfo />} />
+          <Route path={'/verify-email'} element={<VerifyEmail />} />
           <Route path={'/validate-email'} element={<ValidateEmail />} />
           <Route path={'/forgot-password'} element={<ForgotPassword />} />
           <Route path={'/recover/:token/:email'} element={<RecoverPassword />} />
