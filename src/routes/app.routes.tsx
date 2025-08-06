@@ -15,7 +15,7 @@ import { Access, useAuthAdmin } from '@/context/auth-context.tsx';
 import Workspaces from '@/pages/private/workspaces.tsx';
 import VerifyEmail from '@/pages/public/verify-email.tsx';
 import ValidateEmail from '@/pages/public/validate-email.tsx';
-import AccountSettings from '@/pages/private/account.tsx';
+import Account from '@/pages/private/account.tsx';
 import WorkspaceSettings from '@/pages/private/settings/workspace.tsx';
 
 export const AppRoute = () => {
@@ -31,12 +31,12 @@ export const AppRoute = () => {
 
   const pagesAdmin = [
     {
-      path: '/configurations/profile',
+      path: '/profile',
       allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
-      component: AccountSettings,
+      component: Account,
     },
     {
-      path: '/configurations/workspace',
+      path: '/settings/workspace',
       allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
       component: WorkspaceSettings,
     },
@@ -48,7 +48,7 @@ export const AppRoute = () => {
   ];
 
   const pagesPaciente = [
-    { path: '/pacientes-dashboard', allowedRoles: ['PACIENTES'], component: AccountSettings },
+    { path: '/pacientes-dashboard', allowedRoles: ['PACIENTES'], component: Account },
   ]
 
   return (

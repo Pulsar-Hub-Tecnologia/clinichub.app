@@ -84,7 +84,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => {
-                navigate("/configurations/profile");
+                navigate("/profile");
               }}>
                 <BadgeCheck />
                 Minha Conta

@@ -2,16 +2,30 @@ import { ReactNode, useState } from "react";
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { cn } from "@/lib/utils";
+import { Textarea } from "../ui/textarea";
 
-interface BasicInputProps extends React.ComponentPropsWithoutRef<"input"> {
-  label?: string;
-  error?: string;
-  leftIcon?: ReactNode;
-  className?: string;
-}
+type BasicInputProps =
+  | (React.ComponentPropsWithoutRef<"input"> & {
+    label?: string;
+    error?: string;
+    leftIcon?: ReactNode;
+    useTextArea?: false;
+    className?: string;
+  })
+  | (React.ComponentPropsWithoutRef<"textarea"> & {
+    label?: string;
+    error?: string;
+    leftIcon?: ReactNode;
+    useTextArea: true;
+    className?: string;
+  });
 
-const BasicInput = ({ label, error, leftIcon, className, ...rest }: BasicInputProps) => {
-  const [isFocused, setIsFocused] = useState<boolean>(false)
+const BasicInput = (props: BasicInputProps) => {
+  const { label, error, leftIcon, useTextArea, className, ...rest } = props;
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const inputProps = !useTextArea ? rest as React.ComponentPropsWithoutRef<"input"> : undefined;
+  const textareaProps = useTextArea ? rest as React.ComponentPropsWithoutRef<"textarea"> : undefined;
 
   return (
     <div className="space-y-1">
@@ -20,16 +34,27 @@ const BasicInput = ({ label, error, leftIcon, className, ...rest }: BasicInputPr
       )}
       <div className="relative">
         {leftIcon}
-        <Input
-          id={rest.id}
-          className={cn(
-            leftIcon && "pl-9",
-            error && 'border-red-500 focus-visible:ring-red-500',
-            className
-          )}
-          onFocus={() => setIsFocused(true)}
-          {...rest}
-        />
+        {useTextArea ? (
+          <Textarea
+            id={rest.id}
+            className={cn(
+              leftIcon && "pl-9",
+              className
+            )}
+            {...textareaProps}
+          />
+        ) : (
+          <Input
+            id={rest.id}
+            className={cn(
+              leftIcon && "pl-9",
+              error && 'border-red-500 focus-visible:ring-red-500',
+              className
+            )}
+            onFocus={() => setIsFocused(true)}
+            {...inputProps}
+          />
+        )}
       </div>
       {error && (
         <div
