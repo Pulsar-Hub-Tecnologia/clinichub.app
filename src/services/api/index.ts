@@ -35,3 +35,8 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+export const API_IBGE = axios.create({
+  baseURL: "https://servicodados.ibge.gov.br/api/v1/localidades",
+  timeout: 10000
+})
