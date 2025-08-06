@@ -18,29 +18,29 @@ import { AxiosError } from 'axios';
 import AccountService from '@/services/api/account.service';
 
 interface FormFields {
-  user_type: "PERSONAL" | "BUSINESS";
+  userType: 'PERSONAL' | 'BUSINESS';
   email: string;
   password: string;
-  confirm_password: string;
-  check_terms: boolean;
+  confirmPassword: string;
+  checkTerms: boolean;
   name: string;
   cpf: string;
-  clinic_name?: string;
+  clinicName?: string;
   cnpj?: string;
-  council_number?: string;
+  councilNumber?: string;
 }
 
 const defaultFormFields: FormFields = {
-  user_type: "PERSONAL",
+  userType: "PERSONAL",
   email: "",
   password: "",
-  confirm_password: "",
-  check_terms: false,
+  confirmPassword: "",
+  checkTerms: false,
   name: "",
   cpf: "",
-  clinic_name: "",
+  clinicName: "",
   cnpj: "",
-  council_number: "",
+  councilNumber: "",
 };
 
 function validatePasswordCharacteristic(text: string, checkType: "has_upper_letter" | "has_number" | "has_special_char"): boolean {
@@ -70,7 +70,7 @@ export default function RegisterAccess() {
   }, []);
 
   const handleAcceptTerms = useCallback(() => {
-    handleFormFields("check_terms", true);
+    handleFormFields("checkTerms", true);
     setOpenTerms(false);
   }, [handleFormFields]);
 
@@ -79,28 +79,29 @@ export default function RegisterAccess() {
       validatePasswordCharacteristic(formFields.password, "has_upper_letter") &&
       validatePasswordCharacteristic(formFields.password, "has_number") &&
       validatePasswordCharacteristic(formFields.password, "has_special_char") &&
-      formFields.password === formFields.confirm_password
+      formFields.password === formFields.confirmPassword
     );
-  }, [formFields.password, formFields.confirm_password]);
+  }, [formFields.password, formFields.confirmPassword]);
 
   const disabled_button = useMemo(() => {
     return !(
       formFields.email.length > 0 &&
       password_valid &&
-      formFields.check_terms
+      formFields.checkTerms
     );
-  }, [formFields.email, password_valid, formFields.check_terms]);
+  }, [formFields.email, password_valid, formFields.checkTerms]);
 
   const handleSubmit = async () => {
+    console.log(formFields, "FORM")
     try {
       const response = await AccountService.validateAccount({ field: "email", value: formFields.email });
 
-      if (response) {
-        toast.error(response.data.message);
-        return;
+      if (!response.data.has_user) {
+        navigate("/register-info", { state: formFields });
+        return
       }
 
-      navigate("/register-info", { state: formFields });
+      return toast.error("Já existe um usuário com este e-mail!")
     } catch (error) {
       if (error instanceof AxiosError) {
         return toast.error(error.response?.data.message)
@@ -148,16 +149,16 @@ export default function RegisterAccess() {
             <div className="flex flex-col gap-2 2xl:flex-row 2xl:gap-4">
               <Button
                 variant={'outline'}
-                className={cn("flex-1 h-24 flex flex-col items-center justify-center space-y-2 text-base", formFields.user_type === "PERSONAL" && "border-primary bg-accent")}
-                onClick={() => handleFormFields("user_type", "PERSONAL")}
+                className={cn("flex-1 h-24 flex flex-col items-center justify-center space-y-2 text-base", formFields.userType === "PERSONAL" && "border-primary bg-accent")}
+                onClick={() => handleFormFields("userType", "PERSONAL")}
               >
                 <img src={IndividualProfessional} alt="Profissional Individual" />
                 <span>Profissional Individual</span>
               </Button>
               <Button
                 variant={'outline'}
-                className={cn("flex-1 h-24 flex flex-col items-center justify-center space-y-2 text-base", formFields.user_type === "BUSINESS" && "border-primary bg-accent")}
-                onClick={() => handleFormFields("user_type", "BUSINESS")}
+                className={cn("flex-1 h-24 flex flex-col items-center justify-center space-y-2 text-base", formFields.userType === "BUSINESS" && "border-primary bg-accent")}
+                onClick={() => handleFormFields("userType", "BUSINESS")}
               >
                 <img src={ClinicADM} alt="Administrador de Clínica" />
                 <span>Administrador de Clínica</span>
@@ -187,23 +188,23 @@ export default function RegisterAccess() {
 
             <BasicInput
               label="Confirmar senha"
-              value={formFields.confirm_password}
+              value={formFields.confirmPassword}
               placeholder="Confirme sua senha"
               id="confirmPassword"
               type="password"
-              onChange={(e) => handleFormFields("confirm_password", e.target.value)}
+              onChange={(e) => handleFormFields("confirmPassword", e.target.value)}
               leftIcon={
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               }
-              error={formFields.password !== formFields.confirm_password && formFields.confirm_password.length > 0 ? "As senhas não coincidem. Por favor, tente novamente." : undefined}
+              error={formFields.password !== formFields.confirmPassword && formFields.confirmPassword.length > 0 ? "As senhas não coincidem. Por favor, tente novamente." : undefined}
             />
           </section>
 
           <section id='terms-check' className='flex space-x-2 items-center pt-4'>
             <Checkbox
               id="terms"
-              checked={formFields.check_terms}
-              onClick={() => handleFormFields("check_terms", !formFields.check_terms)}
+              checked={formFields.checkTerms}
+              onClick={() => handleFormFields("checkTerms", !formFields.checkTerms)}
             />
             <Label
               className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

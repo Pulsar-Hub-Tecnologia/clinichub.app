@@ -69,8 +69,8 @@ export default function Login() {
         const accesses = response.data.accesses;
         if (accesses.length === 1) {
           AccountService.signWorkspace(accesses[0].workspace_id)
-            .then(() => {
-              signInWithWorkspace(response.data.workspace_token);
+            .then((response) => {
+              signInWithWorkspace(response.data);
               signWorkspace(accesses[0]);
               navigate('/dashboard');
             })

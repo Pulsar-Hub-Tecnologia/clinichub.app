@@ -96,7 +96,7 @@ export default function RegisterInfo() {
     })
       .then((response) => {
         if (response.status === 200) {
-          navigate('/validate-email', { state: formFields.email });
+          navigate('/verify-email', { state: formFields.email });
         }
       })
       .catch((error) => {
@@ -264,15 +264,15 @@ export default function RegisterInfo() {
                 />
               </>
             )}
+            <Button
+              className="w-full py-6 text-lg font-semibold bg-primary hover:bg-primary-foreground text-white flex items-center justify-center space-x-2"
+              disabled={disabledButton}
+              type="submit"
+            >
+              <UserPlus className="h-5 w-5" />
+              Criar conta
+            </Button>
           </form>
-          <Button
-            className="w-full py-6 text-lg font-semibold bg-primary hover:bg-primary-foreground text-white flex items-center justify-center space-x-2"
-            disabled={disabledButton}
-            type="submit"
-          >
-            <UserPlus className="h-5 w-5" />
-            Criar conta
-          </Button>
         </AnimatedComponent>
       </div>
       <section
