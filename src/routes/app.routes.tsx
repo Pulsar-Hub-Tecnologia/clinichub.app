@@ -12,18 +12,36 @@ import Account from '@/pages/private/account.tsx';
 import RegisterAccess from '@/pages/public/register-access.tsx';
 import RegisterInfo from '@/pages/public/register-info.tsx';
 import ValidateEmail from '@/pages/public/validate-email.tsx';
+import Dashboard from '@/pages/private/dashboard.tsx';
+import { Access, useAuthAdmin } from '@/context/auth-context.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
-  // const { user } = useAuth();
+  const { accesses, workspace } = useAuthAdmin();
+  let workspace_id: string;
+  let access: Access | undefined;
 
-  const pages = [
+  if(workspace) {
+    workspace_id =  workspace.workspace_id;
+    access = accesses.find(access => access.workspace_id === workspace_id)!;
+  }
+
+  const pagesAdmin = [
     {
       path: '/account',
-      allowedRoles: ['ADMIN', 'MEMBER'],
+      allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
       component: Account,
     },
+    {
+      path: '/dashboard',
+      allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
+      component: Dashboard, 
+    }
   ];
+
+ const pagesPaciente = [
+    { path: '/pacientes-dashboard', allowedRoles: ['PACIENTES'], component: Account }, 
+  ]
 
   return (
     <>
@@ -38,7 +56,28 @@ export const AppRoute = () => {
           <Route path={'/recover/:token/:email'} element={<RecoverPassword />} />
           <Route path={'/*'} element={<Login />} />
 
-          {pages
+          {access &&
+            pagesAdmin
+              .filter((page) => page.allowedRoles.includes(access.role))
+              .map((e) => (
+                <Route
+                  key={e.path}
+                  path={e.path}
+                  element={
+                    <PrivateRoute>
+                      <SidebarProvider>
+                        <AppSidebar 
+                          side="left" 
+                          role={access.role}
+                          />
+                        <e.component />
+                      </SidebarProvider>
+                    </PrivateRoute>
+                  }
+                />
+              ))}
+
+          {pagesPaciente
             .map((e) => (
               <Route
                 key={e.path}
@@ -46,7 +85,9 @@ export const AppRoute = () => {
                 element={
                   <PrivateRoute>
                     <SidebarProvider>
-                      <AppSidebar side="left" />
+                      <AppSidebar 
+                        side="left" 
+                      />
                       <e.component />
                     </SidebarProvider>
                   </PrivateRoute>
