@@ -5,8 +5,13 @@ import { LoadingProvider } from '@/context/loading-context';
 import { ThemeProvider } from '@/context/theme-context';
 import { AppRoute } from '@/routes/app.routes';
 import { ModeToggle } from './components/mode-toggle/mode-toggle';
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(()=>{
+    console.log('Hello Enviroment')
+  })
   return (
     <ThemeProvider defaultTheme="light">
       <LoadingProvider>
