@@ -11,8 +11,12 @@ export const api = axios.create({ //api é uma variável, não uma classe, ela d
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('clinic_token');
+    const token_workspace = Cookies.get('clinic_workspace_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    if (token_workspace) {
+      config.headers['workspace_token'] = token_workspace;
     }
     return config;
   },
@@ -29,6 +33,7 @@ api.interceptors.response.use(
     if (error.response) {
       if (error.response.data.message === 'Token invalid') {
         Cookies.remove('clinic_token');
+        Cookies.remove('clinic_workspace_token');
         window.location.href = '/login';
       }
     }
