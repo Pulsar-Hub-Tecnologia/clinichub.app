@@ -22,26 +22,26 @@ export const AppRoute = () => {
   let workspace_id: string;
   let access: Access | undefined;
 
-  if(workspace) {
-    workspace_id =  workspace.workspace_id;
+  if (workspace) {
+    workspace_id = workspace.workspace_id;
     access = accesses.find(access => access.workspace_id === workspace_id)!;
   }
 
   const pagesAdmin = [
     {
-      path: '/account',
+      path: '/configurations/profile',
       allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
       component: Account,
     },
     {
       path: '/dashboard',
       allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
-      component: Dashboard, 
+      component: Dashboard,
     }
   ];
 
- const pagesPaciente = [
-    { path: '/pacientes-dashboard', allowedRoles: ['PACIENTES'], component: Account }, 
+  const pagesPaciente = [
+    { path: '/pacientes-dashboard', allowedRoles: ['PACIENTES'], component: Account },
   ]
 
   return (
@@ -68,10 +68,10 @@ export const AppRoute = () => {
                   element={
                     <PrivateRoute>
                       <SidebarProvider>
-                        <AppSidebar 
-                          side="left" 
+                        <AppSidebar
+                          side="left"
                           access={access}
-                          />
+                        />
                         <e.component />
                       </SidebarProvider>
                     </PrivateRoute>
@@ -87,8 +87,8 @@ export const AppRoute = () => {
                 element={
                   <PrivateRoute>
                     <SidebarProvider>
-                      <AppSidebar 
-                        side="left" 
+                      <AppSidebar
+                        side="left"
                       />
                       <e.component />
                     </SidebarProvider>

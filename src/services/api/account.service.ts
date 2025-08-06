@@ -38,7 +38,7 @@ class AccountService {
   }
 
   static async signWorkspace(workspace_id: string): Promise<AxiosResponse> {
-    const response = await api.post(AppRoutes.ACCOUNT + '/accesses/sign-workspace', workspace_id);
+    const response = await api.post(AppRoutes.ACCOUNT + '/accesses/sign-workspace', { workspace_id });
     return response;
   }
 }
