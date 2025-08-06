@@ -3,3 +3,8 @@ export enum AppRoutes {
   ACCOUNT = "/account",
   USER = "/user",
 }
+
+export enum RoutesIBGE {
+  ESTADOS = "/estados",
+  CIDADES = "/municipios"
+}
