@@ -11,6 +11,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import AnimatedComponent from '@/components/animated-component';
 import { toast } from 'react-toastify';
+import AuthService from '@/services/api/auth.service';
+import { AxiosError } from 'axios';
 
 
 export default function VerifyEmail() {
@@ -47,8 +49,17 @@ export default function VerifyEmail() {
   }, [count]);
 
 
-  const handleSubmit = () => {
-    console.log(email, "email")
+  const handleSubmit = async () => {
+    try {
+      await AuthService.resendValidateEmail(email);
+      setCount(15)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return toast.error("Ops! Tivemos um problema, por favor tente novamente!")
+      }
+
+      return toast.error("Ops! Tivemos um problema ao reenviar o email de confirmação!")
+    }
   }
 
   return (
