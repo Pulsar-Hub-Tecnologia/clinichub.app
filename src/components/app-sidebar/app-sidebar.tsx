@@ -182,7 +182,15 @@ const dataPaciente = {
 
 export function AppSidebar({ access, ...props }: React.ComponentProps<typeof Sidebar> & { access?: Access }) {
   const { user } = useAuthAdmin();
-  const data = access?.role === 'ADMIN' || access?.role === 'OWNER' ? dataAdmin : access?.role === 'HYBRID' ? dataAdminProfissional : access?.role === 'PROFFESSIONAL' ? dataProfissional : dataPaciente;
+  const roleDataMap: Record<string, typeof dataAdmin> = {
+    ADMIN: dataAdmin,
+    OWNER: dataAdmin,
+    HYBRID: dataAdminProfissional,
+    PROFFESSIONAL: dataProfissional,
+    PACIENTE: dataPaciente,
+  };
+
+  const data = roleDataMap[access?.role ?? "PACIENTE"];
 
   return (
     <Sidebar collapsible="icon" {...props}>
