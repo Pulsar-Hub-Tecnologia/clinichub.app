@@ -112,130 +112,130 @@ export default function RegisterAccess() {
 
   return (
     <AuthBackground>
-        <div className="flex flex-col justify-center px-4 py-4 sm:px-4 sm:py-6 space-y-3">
-          <AnimatedComponent type='slide-from-left' delay={100} duration='duration-500'>
-            <section id='header' className='space-y-2'>
-              <div className='space-y-2'>
-                <div className="flex items-center space-x-2">
-                  <img src={ClinicHubLogo} alt="ClinicHUB Logo" className="h-10 w-10 rounded-lg" />
-                  <span className="text-2xl font-bold tracking-tight">ClinicHub</span>
-                </div>
-                <p className="text-xs text-muted-foreground">Sistema de Gestão em Saúde</p>
-              </div>
-              <div className='space-y-1'>
-                <h1 className="text-2xl sm:text-3xl font-bold">Criar sua conta</h1>
-                <p className="text-sm">Comece criando seu acesso</p>
-              </div>
-            </section>
-          </AnimatedComponent>
-
-          <AnimatedComponent type='slide-from-left' delay={100}>
-            <section id='progress' className="flex items-center space-x-3">
+      <div className="flex flex-col justify-center px-4 py-4 sm:px-4 sm:py-6 space-y-3">
+        <AnimatedComponent type='slide-from-left' delay={100} duration='duration-500'>
+          <section id='header' className='space-y-2'>
+            <div className='space-y-2'>
               <div className="flex items-center space-x-2">
-                <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
-                <span className="text-xs font-medium text-primary">Acesso</span>
+                <img src={ClinicHubLogo} alt="ClinicHUB Logo" className="h-10 w-10 rounded-lg" />
+                <span className="text-2xl font-bold tracking-tight">ClinicHub</span>
               </div>
-              <div className="w-full h-0.5 bg-gray-300"></div>
-              <div className="flex items-center space-x-2">
-                <div className="w-7 h-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-bold">2</div>
-                <span className="text-xs">Informações</span>
-              </div>
-            </section>
-          </AnimatedComponent>
+              <p className="text-xs text-muted-foreground">Sistema de Gestão em Saúde</p>
+            </div>
+            <div className='space-y-1'>
+              <h1 className="text-2xl sm:text-3xl font-bold">Criar sua conta</h1>
+              <p className="text-sm">Comece criando seu acesso</p>
+            </div>
+          </section>
+        </AnimatedComponent>
 
-          <AnimatedComponent type='slide-from-bottom' delay={200} duration='duration-700' className='space-y-4'>
-            <section id="userTypeSelection" className="space-y-1">
-              <Label className="text-sm">Tipo de usuário</Label>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button
-                  variant={'outline'}
-                  className={cn(
-                    "flex-1 h-14 px-2 py-2 flex flex-col items-center justify-center space-y-1 text-xs",
-                    formFields.userType === "PERSONAL" && "border-primary bg-accent"
-                  )}
-                  onClick={() => handleFormFields("userType", "PERSONAL")}
-                >
-                  <img src={IndividualProfessional} alt="Profissional Individual" className="w-6 h-6" />
-                  <span>Profissional Individual</span>
-                </Button>
-                <Button
-                  variant={'outline'}
-                  className={cn(
-                    "flex-1 h-14 px-2 py-2 flex flex-col items-center justify-center space-y-1 text-xs",
-                    formFields.userType === "BUSINESS" && "border-primary bg-accent"
-                  )}
-                  onClick={() => handleFormFields("userType", "BUSINESS")}
-                >
-                  <img src={ClinicADM} alt="Administrador de Clínica" className="w-6 h-6" />
-                  <span>Administrador de Clínica</span>
-                </Button>
-              </div>
-            </section>
+        <AnimatedComponent type='slide-from-left' delay={100}>
+          <section id='progress' className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
+              <span className="text-xs font-medium text-primary">Acesso</span>
+            </div>
+            <div className="w-full h-0.5 bg-gray-300"></div>
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-bold">2</div>
+              <span className="text-xs">Informações</span>
+            </div>
+          </section>
+        </AnimatedComponent>
 
-            <section id="inputs" className='space-y-3'>
-              <BasicInput
-                label="E-mail"
-                leftIcon={
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                }
-                id="email"
-                type="email"
-                autoComplete='email'
-                placeholder="seu@email.com"
-                onChange={(e) => handleFormFields("email", e.target.value)}
-                value={formFields.email}
-              />
-
-              <PasswordInput
-                label="Senha"
-                value={formFields.password}
-                onChange={(e) => handleFormFields("password", e.target.value)}
-              />
-
-              <BasicInput
-                label="Confirmar senha"
-                value={formFields.confirmPassword}
-                placeholder="Confirme sua senha"
-                id="confirmPassword"
-                type="password"
-                onChange={(e) => handleFormFields("confirmPassword", e.target.value)}
-                leftIcon={
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                }
-                error={formFields.password !== formFields.confirmPassword && formFields.confirmPassword.length > 0 ? "As senhas não coincidem. Por favor, tente novamente." : undefined}
-              />
-            </section>
-
-            <section id='terms-check' className='flex space-x-2 items-center pt-2'>
-              <Checkbox
-                id="terms"
-                checked={formFields.checkTerms}
-                onClick={() => handleFormFields("checkTerms", !formFields.checkTerms)}
-              />
-              <Label
-                className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        <AnimatedComponent type='slide-from-bottom' delay={200} duration='duration-700' className='space-y-4'>
+          <section id="userTypeSelection" className="space-y-1">
+            <Label className="text-sm">Tipo de usuário</Label>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                variant={'outline'}
+                className={cn(
+                  "flex-1 h-20 px-2 py-2 flex flex-col items-center justify-center space-y-1 text-xs",
+                  formFields.userType === "PERSONAL" && "border-primary bg-accent"
+                )}
+                onClick={() => handleFormFields("userType", "PERSONAL")}
               >
-                Concordo com os
-                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Termos de Uso</span> e
-                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Política de Privacidade</span>
-              </Label>
-            </section>
-            <TermsModal
-              isOpen={openTerms}
-              onClose={() => setOpenTerms(false)}
-              onAccept={handleAcceptTerms}
+                <img src={IndividualProfessional} alt="Profissional Individual" className="w-6 h-6" />
+                <span>Profissional Individual</span>
+              </Button>
+              <Button
+                variant={'outline'}
+                className={cn(
+                  "flex-1 h-20 px-2 py-2 flex flex-col items-center justify-center space-y-1 text-xs",
+                  formFields.userType === "BUSINESS" && "border-primary bg-accent"
+                )}
+                onClick={() => handleFormFields("userType", "BUSINESS")}
+              >
+                <img src={ClinicADM} alt="Administrador de Clínica" className="w-6 h-6" />
+                <span>Administrador de Clínica</span>
+              </Button>
+            </div>
+          </section>
+
+          <section id="inputs" className='space-y-3'>
+            <BasicInput
+              label="E-mail"
+              leftIcon={
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              }
+              id="email"
+              type="email"
+              autoComplete='email'
+              placeholder="seu@email.com"
+              onChange={(e) => handleFormFields("email", e.target.value)}
+              value={formFields.email}
             />
 
-            <Button
-              className="w-full py-4 text-base font-semibold bg-primary hover:bg-primary-foreground text-white flex items-center justify-center space-x-2"
-              disabled={disabled_button}
-              onClick={handleSubmit}
+            <PasswordInput
+              label="Senha"
+              value={formFields.password}
+              onChange={(e) => handleFormFields("password", e.target.value)}
+            />
+
+            <BasicInput
+              label="Confirmar senha"
+              value={formFields.confirmPassword}
+              placeholder="Confirme sua senha"
+              id="confirmPassword"
+              type="password"
+              onChange={(e) => handleFormFields("confirmPassword", e.target.value)}
+              leftIcon={
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              }
+              error={formFields.password !== formFields.confirmPassword && formFields.confirmPassword.length > 0 ? "As senhas não coincidem. Por favor, tente novamente." : undefined}
+            />
+          </section>
+
+          <section id='terms-check' className='flex space-x-2 items-center pt-2'>
+            <Checkbox
+              id="terms"
+              checked={formFields.checkTerms}
+              onClick={() => handleFormFields("checkTerms", !formFields.checkTerms)}
+            />
+            <Label
+              className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Continuar
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-          </AnimatedComponent>
-        </div>
+              Concordo com os
+              <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Termos de Uso</span> e
+              <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Política de Privacidade</span>
+            </Label>
+          </section>
+          <TermsModal
+            isOpen={openTerms}
+            onClose={() => setOpenTerms(false)}
+            onAccept={handleAcceptTerms}
+          />
+
+          <Button
+            className="w-full py-4 text-base font-semibold bg-primary hover:bg-primary-foreground text-white flex items-center justify-center space-x-2"
+            disabled={disabled_button}
+            onClick={handleSubmit}
+          >
+            Continuar
+            <ArrowRight className="h-5 w-5" />
+          </Button>
+        </AnimatedComponent>
+      </div>
     </AuthBackground>
   );
 }
