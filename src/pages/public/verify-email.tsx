@@ -27,7 +27,7 @@ export default function VerifyEmail() {
   useEffect(() => {
     if (!email) {
       toast.error("Informações incompletas. Comece o registro novamente.")
-      //navigate("/register-access")
+      navigate("/register-access")
     }
 
 
