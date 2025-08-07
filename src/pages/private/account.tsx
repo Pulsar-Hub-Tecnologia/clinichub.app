@@ -5,7 +5,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Save, Upload, Image } from 'lucide-react';
+import { Save, Upload, Image, Check } from 'lucide-react';
 import BasicInput from '@/components/basic-input/basic-input';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Switch } from '@/components/ui/switch';
@@ -13,34 +13,35 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useLoading } from '@/context/loading-context';
-import AccountService from '@/services/api/account.service';
+import AccountService, { AccountData } from '@/services/api/account.service';
 import { useAuthAdmin } from '@/context/auth-context';
 import { useTheme } from '@/context/theme-context';
+import { formatPhone } from '@/utils/formats';
 
-interface IAccountData {
-  name: string;
-  email: string;
-  crm: string;
-  role?: "ADMIN" | "OWNER" | "PROFESSIONAL" | "HYBRID";
-  phone?: string;
-  especiality?: string;
-  dateBirth?: string;
-  bio?: string;
-}
-
-const defaultAccountData: IAccountData = {
+const defaultAccountData: AccountData = {
+  id: "",
   name: "",
   email: "",
-  crm: "",
-  role: "ADMIN",
-  phone: undefined,
-  especiality: undefined,
-  dateBirth: undefined,
-  bio: undefined,
+  phone: "",
+  cpf: "",
+  regional_council_number: "",
+  picture: undefined,
+  especiality: "",
+  dateBirth: "",
+  bio: "",
+  has_reset_pass: false,
+  has_verified_email: false,
+  password_hash: "",
+  reset_password_expires: undefined,
+  token_reset_password: undefined,
+  created_at: "",
+  updated_at: undefined,
+  deleted_at: undefined,
 }
 
 export default function Account() {
-  const [accountData, setAccountData] = useState<IAccountData>(defaultAccountData)
+  const [accountData, setAccountData] = useState<AccountData>(defaultAccountData)
+  const [hasChanged, setHasChanged] = useState<boolean>(false)
 
   const { onLoading, offLoading } = useLoading()
   const { workspace } = useAuthAdmin()
@@ -51,11 +52,7 @@ export default function Account() {
       try {
         onLoading()
         const responseAccout = await AccountService.getAccount()
-        setAccountData({
-          name: responseAccout.name,
-          email: responseAccout.email,
-          crm: responseAccout.regional_council_number,
-        })
+        setAccountData(responseAccout)
       } catch (error) {
         if (error instanceof AxiosError) {
           toast.error(error.message)
@@ -68,27 +65,27 @@ export default function Account() {
     })()
   }, [])
 
-  const handleChangeData = <T extends keyof IAccountData>(field: T, value: IAccountData[T] | boolean) => {
-    if (field === "role") {
-      return setAccountData((prev) => ({
-        ...prev,
-        role: value ? "HYBRID" : prev.role
-      }))
+  const handleSaveData = async () => {
+    try {
+      onLoading()
+      await AccountService.updateAccount(accountData)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return toast.error(error.message || "Ops! Tivemos um erro ao atualizar seus dados!")
+      }
+      toast.error("Ops! Tivemos um erro ao atualizar seus dados!")
+    } finally {
+      setHasChanged(false)
+      offLoading()
     }
+  }
 
+  const handleChangeData = <T extends keyof AccountData>(field: T, value: AccountData[T] | boolean) => {
+    setHasChanged(true)
     return setAccountData((prev) => ({
       ...prev,
       [field]: value
     }))
-  }
-
-  const copyRegisterLink = () => {
-    if (!navigator.clipboard) {
-      return toast.warn("Ops! Parece que seu navegador não tem área de transferência!")
-    }
-
-    navigator.clipboard.writeText("Link de Registro...")
-    return toast.info("O Link foi copiado!")
   }
 
   return (
@@ -101,9 +98,9 @@ export default function Account() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant={'default'} className="flex items-center gap-1">
-            <Save className="h-4 w-4" />
-            <span className='hidden md:inline'>Salvar Alterações</span>
+          <Button variant={'default'} className="flex items-center gap-1" disabled={!hasChanged} onClick={handleSaveData}>
+            {hasChanged ? <Save className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+            <span className='hidden md:inline'>{hasChanged ? "Salvar Alterações" : "Dados Atualizados"}</span>
           </Button>
         </div>
       </section>
@@ -115,7 +112,7 @@ export default function Account() {
               {workspace?.type === "BUSINESS" && workspace.role !== "PROFESSIONAL" && (
                 <div className='flex items-center gap-2'>
                   <p>Sou profissional</p>
-                  <Switch checked={accountData.role === "HYBRID"} onCheckedChange={(checked) => handleChangeData("role", checked)} />
+                  <Switch checked={workspace.role === "HYBRID"} />
                 </div>)
               }
             </CardHeader>
@@ -133,6 +130,7 @@ export default function Account() {
                 placeholder="Digite o seu Email"
                 id="email"
                 type="email"
+                value={accountData.email}
                 onChange={(e) => handleChangeData("email", e.target.value)}
               />
               <BasicInput
@@ -140,6 +138,8 @@ export default function Account() {
                 placeholder="Digite o seu Telefone"
                 id="phone"
                 type="tel"
+                value={formatPhone(accountData.phone)}
+                maxLength={15}
                 onChange={(e) => handleChangeData("phone", e.target.value)}
               />
               <BasicInput
@@ -147,13 +147,16 @@ export default function Account() {
                 placeholder="Digite o seu CRM"
                 id="crm"
                 type="text"
-                onChange={(e) => handleChangeData("crm", e.target.value)}
+                maxLength={13}
+                value={accountData.regional_council_number}
+                onChange={(e) => handleChangeData("regional_council_number", e.target.value)}
               />
               <BasicInput
                 label="Especialidade"
                 placeholder="Digite o sua Especialidade"
                 id="especiality"
                 type="text"
+                value={accountData.especiality}
                 onChange={(e) => handleChangeData("especiality", e.target.value)}
               />
               <BasicInput
@@ -161,6 +164,7 @@ export default function Account() {
                 placeholder="Digite o sua Data de Nascimento"
                 id="dateBirth"
                 type="date"
+                value={accountData.dateBirth}
                 onChange={(e) => handleChangeData("dateBirth", e.target.value)}
               />
               <BasicInput
@@ -168,6 +172,7 @@ export default function Account() {
                 label="Bio Profissional"
                 placeholder="Digite o sua Bio Prossional"
                 id="bio"
+                value={accountData.bio}
                 useTextArea={true}
                 onChange={(e) => handleChangeData("bio", e.target.value)}
               />
@@ -175,7 +180,7 @@ export default function Account() {
           </Card>
 
           <Card>
-            <CardHeader className='items-start'>
+            <CardHeader>
               <CardTitle className="text-lg font-semibold">Preferências do Sistema</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 gap-2">
@@ -189,33 +194,11 @@ export default function Account() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className='items-start'>
+            <CardHeader>
               <CardTitle className="text-lg font-semibold">Segurança da Conta</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 gap-2">
-              <div className='flex items-center justify-between w-full'>
-                <div>
-                  <h2>Permitir agendamento online</h2>
-                  <p className="text-sm text-gray-500">Pacientes podem agendar consultas pelo sistema</p>
-                </div>
-                <Switch />
-              </div>
-              <div className='flex items-center justify-between w-full '>
-                <div>
-                  <h2>Notificações por WhatsApp</h2>
-                  <p className="text-sm text-gray-500">Enviar lembretes e confirmações via WhatsApp</p>
-                </div>
-                <Switch />
-              </div>
-              <div className='flex items-center justify-between w-full '>
-                <div>
-                  <h2>Permitir que os pacientes se autocadastrem</h2>
-                  <p className="text-sm text-gray-500">Os pacientes poderão se cadastrar por um link </p>
-                </div>
-                <Switch />
-              </div>
 
-              <h2 className='text-primary font-semibold hover:underline cursor-pointer w-fit mt-5' onClick={copyRegisterLink}>Copiar link de cadastro</h2>
             </CardContent>
           </Card>
         </div>

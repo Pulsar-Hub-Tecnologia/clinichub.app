@@ -72,7 +72,7 @@ export default function Login() {
             .then((response) => {
               signInWithWorkspace(response.data);
               signWorkspace(accesses[0]);
-              navigate('/profile');
+              navigate('/account');
             })
             .catch((error) => {
               if (error instanceof AxiosError) {
@@ -163,9 +163,9 @@ export default function Login() {
                     className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 }
               />
-              <span className="text-right block text-primary hover:underline ml-1 cursor-pointer" onClick={() => navigate('/forgot-password')}>
-                Esqueceu a senha?
-              </span>
+              <div className="flex justify-end ml-1" onClick={() => navigate('/forgot-password')}>
+                <p className="w-fit text-primary hover:underline cursor-pointer">Esqueceu a senha?</p>
+              </div>
 
               <Button
                 className="w-full py-6 text-lg font-semibold bg-primary hover:bg-primary-foreground text-white flex items-center justify-center space-x-2"
@@ -180,7 +180,7 @@ export default function Login() {
                 className="text-center block text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Não tem uma conta?
-                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => navigate('/register-access')}>Cadastre-se gartuitamente</span>
+                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => navigate('/register-access')}>Cadastre-se gratuitamente</span>
               </Label>
             </form>
           </AnimatedComponent>

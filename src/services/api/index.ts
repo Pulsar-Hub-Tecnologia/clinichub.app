@@ -16,7 +16,7 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     if (token_workspace) {
-      config.headers['workspace_token'] = token_workspace;
+      config.headers['x-workspace-token'] = token_workspace;
     }
     return config;
   },

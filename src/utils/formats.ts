@@ -145,7 +145,9 @@ export function formatDateInput(value: string): string {
   return formatted;
 }
 
-export function formatPhone(phone: string) {
+export function formatPhone(phone: string | undefined) {
+  if (!phone) return ""
+
   if (phone) {
     phone = phone.toString();
     phone = phone.replace(/[^*\d]/g, ''); // Remove tudo o que não é dígito exceto o asterisco
@@ -190,4 +192,18 @@ export function formatInt(number: string) {
 
 export function wppConnected(status: string) {
   return status === 'Connected';
+}
+
+export function formatarCEP(cep: string | null | undefined): string {
+  if (!cep) {
+    return '';
+  }
+
+  const numerosCEP = cep.replace(/\D/g, '');
+
+  if (numerosCEP.length !== 8) {
+    return '';
+  }
+
+  return `${numerosCEP.substring(0, 5)}-${numerosCEP.substring(5)}`;
 }
