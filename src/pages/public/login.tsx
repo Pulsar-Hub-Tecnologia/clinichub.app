@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LogIn, Mail, Lock } from 'lucide-react';
 import { emailValidator } from '@/utils/valid';
-import { Card, CardContent, CardHeader} from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import AuthService from '@/services/api/auth.service';
 import AccountService from '@/services/api/account.service';
 import AuthBackground from '@/components/auth-background/auth-background';
@@ -69,7 +69,7 @@ export default function Login() {
             .then((response) => {
               signInWithWorkspace(response.data);
               signWorkspace(accesses[0]);
-              navigate('/profile');
+              navigate('/account');
             })
             .catch((error) => {
               if (error instanceof AxiosError) {
@@ -101,25 +101,25 @@ export default function Login() {
   const disabled = data.email === '' || data.password === '' || emailError !== undefined;
 
   return (
-  <AuthBackground>
-    <AnimatedComponent type='slide-from-left' delay={100} duration='duration-500'>
-      <Card className='flex flex-col justify-center'>
-            <CardHeader id='header'>
-              <div className='space-y-2 self-start'>
-                <div className="flex items-center space-x-2">
-                  <img src={ClinicHubLogo} />
-                  <span className="text-xl font-semibold">ClinicHub</span>
-                </div>
-                <p className="text-sm">Sistema de Gestão em Saúde</p>
+    <AuthBackground>
+      <AnimatedComponent type='slide-from-left' delay={100} duration='duration-500'>
+        <Card className='flex flex-col justify-center'>
+          <CardHeader id='header'>
+            <div className='space-y-2 self-start'>
+              <div className="flex items-center space-x-2">
+                <img src={ClinicHubLogo} />
+                <span className="text-xl font-semibold">ClinicHub</span>
               </div>
-              <div className='space-y-1 self-start'>
-                <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
-                <p>Acesse sua conta para continuar</p>
-              </div>
-            </CardHeader>
+              <p className="text-sm">Sistema de Gestão em Saúde</p>
+            </div>
+            <div className='space-y-1 self-start'>
+              <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
+              <p>Acesse sua conta para continuar</p>
+            </div>
+          </CardHeader>
 
-            <CardContent>
-              <form onSubmit={handleSubmit} id="inputs" className='space-y-5'>
+          <CardContent>
+            <form onSubmit={handleSubmit} id="inputs" className='space-y-5'>
               <BasicInput
                 label="E-mail"
                 leftIcon={
@@ -173,14 +173,14 @@ export default function Login() {
                 className="text-center block text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Não tem uma conta?
-                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => navigate('/register-access')}>Cadastre-se gartuitamente</span>
+                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => navigate('/register-access')}>Cadastre-se gratuitamente</span>
               </Label>
             </form>
-            </CardContent>
+          </CardContent>
 
         </Card>
-    </AnimatedComponent>
-  </AuthBackground>
+      </AnimatedComponent>
+    </AuthBackground>
   );
 }
 

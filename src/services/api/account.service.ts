@@ -13,20 +13,25 @@ interface CreateAccountProps {
   cnpj?: string;
 }
 
-interface GetAccountResponse {
-  cpf: string;
-  created_at: string;
-  deleted_at: string | null;
-  email: string;
-  has_reset_pass: boolean;
+export interface AccountData {
   id: string;
   name: string;
+  cpf: string;
+  email: string;
+  regional_council_number?: string;
+  phone?: string;
+  especiality?: string;
+  date_birth?: string;
+  bio?: string;
+  picture?: string;
+  has_reset_pass: boolean;
+  has_verified_email: boolean;
   password_hash: string;
-  picture: string | null;
-  regional_council_number: string;
-  reset_password_expires: string | null;
-  token_reset_password: string | null;
-  updated_at: string;
+  token_reset_password?: string;
+  reset_password_expires?: string;
+  created_at: string;
+  updated_at?: string;
+  deleted_at?: string;
 }
 
 class AccountService {
@@ -35,25 +40,58 @@ class AccountService {
     return response;
   }
 
-  static async getAccount(): Promise<GetAccountResponse> {
+  static async getAccount(): Promise<AccountData> {
     try {
       const response = await api.get(AppRoutes.ACCOUNT);
       return response.data
     } catch {
       return {
-        cpf: "",
-        created_at: "",
-        deleted_at: null,
-        email: "",
-        has_reset_pass: false,
         id: "",
         name: "",
-        password_hash: "",
-        picture: null,
+        email: "",
+        phone: "",
+        cpf: "",
         regional_council_number: "",
-        reset_password_expires: null,
-        token_reset_password: null,
-        updated_at: "",
+        picture: undefined,
+        especiality: "",
+        date_birth: "",
+        bio: "",
+        has_reset_pass: false,
+        has_verified_email: false,
+        password_hash: "",
+        reset_password_expires: undefined,
+        token_reset_password: undefined,
+        created_at: "",
+        updated_at: undefined,
+        deleted_at: undefined,
+      }
+    }
+  }
+
+  static async updateAccount(body: AccountData): Promise<AccountData> {
+    try {
+      const response = await api.put(AppRoutes.ACCOUNT, body);
+      return response.data
+    } catch {
+      return {
+        id: "",
+        name: "",
+        email: "",
+        phone: "",
+        cpf: "",
+        regional_council_number: "",
+        picture: undefined,
+        especiality: "",
+        date_birth: "",
+        bio: "",
+        has_reset_pass: false,
+        has_verified_email: false,
+        password_hash: "",
+        reset_password_expires: undefined,
+        token_reset_password: undefined,
+        created_at: "",
+        updated_at: undefined,
+        deleted_at: undefined,
       }
     }
   }

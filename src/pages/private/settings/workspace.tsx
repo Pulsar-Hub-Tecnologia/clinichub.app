@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Save, Upload, Image } from 'lucide-react';
+import { Save, Upload, Image, Check } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import BasicInput from '@/components/basic-input/basic-input';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -16,52 +16,47 @@ import AddressService, { GetState } from '@/services/api/address.service';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useLoading } from '@/context/loading-context';
+import WorkspaceService, { WorkspaceData } from '@/services/api/workspace.service';
+import { formatarCEP, formatCpfCnpj, formatPhone } from '@/utils/formats';
 
-interface AccountData {
-  basic: {
-    name: string;
-    cnpj: string;
-    phone: string;
-    whatsapp: string;
-    email: string;
-  }
-  address: {
-    cep: string;
-    number?: number;
-    street: string;
-    neighborhood: string;
-    city: string;
-    state: {
-      acronym: string;
-      name: string;
-    }
-  }
+interface IWorkspaceData extends WorkspaceData {
+  appointmentOnline: boolean;
+  whatsappNotification: boolean;
+  selfRegister: boolean;
 }
 
-const defaultAccountData = {
-  basic: {
-    name: "",
-    cnpj: "",
-    phone: "",
-    whatsapp: "",
-    email: "",
-  },
+const defaultWorkspaceData: IWorkspaceData = {
+  name: "",
+  cnpj: "",
+  phone: "",
+  whatsapp: "",
+  email: "",
   address: {
     cep: "",
-    number: undefined,
+    number: "",
     street: "",
     neighborhood: "",
     city: "",
     state: {
       acronym: "",
       name: "",
-    }
-  }
-}
+    },
+  },
+  appointmentOnline: false,
+  whatsappNotification: false,
+  selfRegister: false,
+};
+
+type NestedKeyOf<T> = {
+  [K in keyof T & (string | number)]: T[K] extends object
+  ? `${K}` | `${K}.${NestedKeyOf<T[K]>}`
+  : `${K}`;
+}[keyof T & (string | number)];
 
 export default function WorkspaceSettings() {
   const [statesList, setStatesList] = useState<GetState[]>([])
-  const [accountData, setAccountData] = useState<AccountData>(defaultAccountData)
+  const [workspaceData, setWorkspaceData] = useState<Partial<IWorkspaceData>>(defaultWorkspaceData)
+  const [hasChanged, setHasChanged] = useState<boolean>(false)
 
   const { onLoading, offLoading } = useLoading()
 
@@ -69,9 +64,25 @@ export default function WorkspaceSettings() {
     (async () => {
       try {
         onLoading()
-        const responseStates = await AddressService.getStates()
-        setStatesList(responseStates)
-        setAccountData(defaultAccountData)
+        const [responseStates, responseWorkspace] = await Promise.allSettled([
+          AddressService.getStates(),
+          WorkspaceService.getWorkspace()
+        ])
+
+        if (responseWorkspace.status === "rejected" || responseStates.status === "rejected") {
+          toast.error("Ops! Não conseguimos carregar os dados do seu workspace no momento!")
+          return
+        }
+
+        setStatesList(responseStates.value)
+        setWorkspaceData({
+          name: responseWorkspace.value.name,
+          cnpj: responseWorkspace.value.cnpj,
+          email: responseWorkspace.value.email,
+          address: responseWorkspace.value.address,
+          phone: responseWorkspace.value.phone,
+          whatsapp: responseWorkspace.value.whatsapp,
+        })
       } catch (error) {
         if (error instanceof AxiosError) {
           toast.error(error.message)
@@ -82,6 +93,43 @@ export default function WorkspaceSettings() {
     })()
   }, [])
 
+  const handleSaveData = async () => {
+    try {
+      onLoading()
+      await WorkspaceService.updateWorkspace(workspaceData)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return toast.error(error.message || "Ops! Tivemos um erro ao atualizar seus dados!")
+      }
+      toast.error("Ops! Tivemos um erro ao atualizar seus dados!")
+    } finally {
+      setHasChanged(false)
+      offLoading()
+    }
+  }
+
+  const handleChangeData = <T extends NestedKeyOf<IWorkspaceData>>(field: T, value: any) => {
+    setHasChanged(true);
+    return setWorkspaceData((prev) => {
+      const newPrev = { ...prev };
+      const [mainField, subField] = field.split('.');
+
+      if (subField) {
+        // @ts-ignore
+        newPrev[mainField] = {
+          // @ts-ignore
+          ...newPrev[mainField],
+          [subField]: value,
+        };
+      } else {
+        // @ts-ignore
+        newPrev[mainField] = value;
+      }
+
+      return newPrev;
+    });
+  };
+
   const copyRegisterLink = () => {
     if (!navigator.clipboard) {
       return toast.warn("Ops! Parece que seu navegador não tem área de transferência!")
@@ -91,19 +139,48 @@ export default function WorkspaceSettings() {
     return toast.info("O Link foi copiado!")
   }
 
+  const concatAddress = () => {
+    const parts = [];
+
+    if (workspaceData.name) {
+      parts.push(workspaceData.name);
+    }
+
+    const addressParts = [];
+    if (workspaceData.address?.street) {
+      addressParts.push(workspaceData.address.street);
+    }
+    if (workspaceData.address?.number) {
+      addressParts.push(workspaceData.address.number);
+    }
+
+    if (addressParts.length > 0) {
+      parts.push(addressParts.join(', '));
+    }
+
+    if (workspaceData.address?.neighborhood) {
+      parts.push(workspaceData.address.neighborhood);
+    }
+    if (workspaceData.address?.city) {
+      parts.push(workspaceData.address.city);
+    }
+
+    return parts.join(' - ');
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-background p-4 md:p-6 gap-5">
       <section className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Configurações da Clínica</h1>
-            <p className="text-sm text-gray-500">Endereço da Clínica</p>
+            <p className="text-sm text-gray-500">{concatAddress()}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant={'default'} className="flex items-center gap-1">
-            <Save className="h-4 w-4" />
-            <span className='hidden md:inline'>Salvar Alterações</span>
+          <Button variant={'default'} className="flex items-center gap-1" disabled={!hasChanged} onClick={handleSaveData}>
+            {hasChanged ? <Save className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+            <span className='hidden md:inline'>{hasChanged ? "Salvar Alterações" : "Dados Atualizados"}</span>
           </Button>
         </div>
       </section>
@@ -119,41 +196,40 @@ export default function WorkspaceSettings() {
                 placeholder="Digite Nome da Clínica"
                 id="clininName"
                 type="text"
-                value={accountData.basic.name}
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={workspaceData.name}
+                onChange={(e) => handleChangeData("name", e.target.value)}
               />
               <BasicInput
                 label="CNPJ"
                 placeholder="Digite CNPJ"
                 id="cnpj"
                 type="text"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={formatCpfCnpj(workspaceData.cnpj)}
+                onChange={(e) => handleChangeData("cnpj", e.target.value)}
               />
               <BasicInput
                 label="Telefone Principal"
                 placeholder="Digite Telefone Principal"
                 id="phone"
                 type="tel"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={formatPhone(workspaceData.phone)}
+                onChange={(e) => handleChangeData("phone", e.target.value)}
               />
               <BasicInput
                 label="WhatsApp"
                 placeholder="Digite WhatsApp"
                 id="whatsApp"
                 type="tel"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={formatPhone(workspaceData.whatsapp)}
+                onChange={(e) => handleChangeData("whatsapp", e.target.value)}
               />
               <BasicInput
                 label="E-mail"
                 placeholder="contato@clinicacentro.com.br"
                 id="email"
                 type="email"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={workspaceData.email}
+                onChange={(e) => handleChangeData("email", e.target.value)}
               />
             </CardContent>
           </Card>
@@ -168,45 +244,44 @@ export default function WorkspaceSettings() {
                 placeholder="01234-567"
                 id="cep"
                 type="text"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={formatarCEP(workspaceData.address?.cep)}
+                onChange={(e) => handleChangeData("address.cep", e)}
               />
               <BasicInput
                 label="Número"
                 placeholder="123"
                 id="number"
-                type="number"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                type="text"
+                value={workspaceData.address?.number}
+                onChange={(e) => handleChangeData("address.number", e.target.value)}
               />
               <BasicInput
                 label="Rua"
                 placeholder="Rua das Flores"
                 id="street"
                 type="text"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={workspaceData.address?.street}
+                onChange={(e) => handleChangeData("address.street", e.target.value)}
               />
               <BasicInput
                 label="Bairro"
                 placeholder="Centro"
                 id="neighborhood"
                 type="text"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={workspaceData.address?.neighborhood}
+                onChange={(e) => handleChangeData("address.neighborhood", e.target.value)}
               />
               <BasicInput
                 label="Cidade"
                 placeholder="São Paulo"
                 id="city"
                 type="text"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+                value={workspaceData.address?.city}
+                onChange={(e) => handleChangeData("address.city", e.target.value)}
               />
               <div className="space-y-2">
                 <Label htmlFor="state">Estado</Label>
-                {/* [TODO]: Alterar o DEFAULT VALUE para o valor vindo do banco */}
-                <Select defaultValue="SP">
+                <Select defaultValue={workspaceData.address?.state.acronym} onValueChange={(e) => handleChangeData("address.state", { acronym: e, name: statesList.find(state => state.sigla === e)?.nome! })}>
                   <SelectTrigger id="state">
                     <SelectValue placeholder="Selecione o estado" />
                   </SelectTrigger>
@@ -222,8 +297,8 @@ export default function WorkspaceSettings() {
                 placeholder="Sala, andar, etc."
                 id="complement"
                 type="text"
-              // defaultValue={}
-              // onChange={(e) => setUser('password', e.target.value)}
+
+                onChange={(e) => handleChangeData("name", e.target.value)}
               />
             </CardContent>
           </Card>

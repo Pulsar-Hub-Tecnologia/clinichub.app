@@ -2,7 +2,6 @@
 
 import * as React from "react"
 
-
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +15,31 @@ import { NavUser } from "./nav-user"
 import { Access, useAuthAdmin } from "@/context/auth-context"
 import { BookOpenText, BookText, CalendarDays, ChartColumn, Settings2, Stethoscope, UsersRound, WalletMinimal } from "lucide-react"
 
+const dataAdminPersonal = {
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "#",
+      icon: ChartColumn,
+      isActive: true
+    },
+    {
+      title: "Pacientes",
+      url: "#",
+      icon: UsersRound
+    },
+    {
+      title: "Consultas",
+      url: "#",
+      icon: CalendarDays
+    },
+    {
+      title: "Financeiro",
+      url: "#",
+      icon: WalletMinimal,
+    },
+  ],
+}
 const dataAdmin = {
   navMain: [
     {
@@ -46,7 +70,7 @@ const dataAdmin = {
     },
     {
       title: "Configurações",
-      url: "#",
+      url: "/settings/workspace",
       icon: Settings2,
     },
   ],
@@ -112,7 +136,7 @@ const dataAdminProfissional = {
     },
     {
       title: "Configurações",
-      url: "#",
+      url: "/settings/workspace",
       icon: Settings2,
     },
   ],
@@ -190,7 +214,13 @@ export function AppSidebar({ access, ...props }: React.ComponentProps<typeof Sid
     PACIENTE: dataPaciente,
   };
 
-  const data = roleDataMap[access?.role ?? "PACIENTE"];
+  const data = () => {
+    if (access?.type === "PERSONAL") {
+      return dataAdminPersonal
+    }
+
+    return roleDataMap[access?.role ?? "PACIENTE"]
+  };
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -198,7 +228,7 @@ export function AppSidebar({ access, ...props }: React.ComponentProps<typeof Sid
         <WorkspacesSwitcher workspaceSelecionado={access} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data().navMain} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user!} />

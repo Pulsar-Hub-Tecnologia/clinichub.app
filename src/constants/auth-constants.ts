@@ -1,6 +1,6 @@
 export enum AccessLevel {
-    OWNER = "Administrador",
-    HYBRID = "Administrador",
+    OWNER = "Profissional Individual",
+    HYBRID = "Administrador & Profissional",
     ADMIN = "Administrador",
     PROFESSIONAL = "Profissional",
     PATIENT = "Paciente",

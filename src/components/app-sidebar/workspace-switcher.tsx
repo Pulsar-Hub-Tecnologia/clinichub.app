@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -21,7 +20,7 @@ import {
 import { Access, useAuthAdmin } from "@/context/auth-context"
 import { mapAccessLevel } from "@/constants/auth-constants"
 
-export function WorkspacesSwitcher( { workspaceSelecionado }: { workspaceSelecionado: Access | undefined } ) {
+export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecionado: Access | undefined }) {
   const { accesses } = useAuthAdmin();
   const { isMobile } = useSidebar();
   const [activeWorkspace, setActiveTeam] = React.useState(workspaceSelecionado);
@@ -68,7 +67,7 @@ export function WorkspacesSwitcher( { workspaceSelecionado }: { workspaceSelecio
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Workspaces
             </DropdownMenuLabel>
-            {accesses.map((workspace, index) => (
+            {accesses.map((workspace) => (
               <DropdownMenuItem
                 key={workspace.name}
                 onClick={() => setActiveTeam(workspace)}
@@ -87,7 +86,6 @@ export function WorkspacesSwitcher( { workspaceSelecionado }: { workspaceSelecio
                 <span className="text-xs text-muted-foreground">
                   {mapAccessLevel(workspace.role)}
                 </span>
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />

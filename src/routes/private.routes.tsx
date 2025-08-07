@@ -7,7 +7,11 @@ interface PrivateProps {
 }
 
 function Private({ children }: PrivateProps) {
-  if (Cookies.get('clinic_token')) {
+  const token = () => {
+    return Cookies.get("clinic_token")
+  }
+
+  if (token()) {
     return children;
   }
 
