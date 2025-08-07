@@ -20,7 +20,7 @@ const dataAdmin = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: ChartColumn,
       isActive: true
     },
