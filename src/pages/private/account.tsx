@@ -27,7 +27,7 @@ const defaultAccountData: AccountData = {
   regional_council_number: "",
   picture: undefined,
   especiality: "",
-  dateBirth: "",
+  date_birth: "",
   bio: "",
   has_reset_pass: false,
   has_verified_email: false,
@@ -164,8 +164,8 @@ export default function Account() {
                 placeholder="Digite o sua Data de Nascimento"
                 id="dateBirth"
                 type="date"
-                value={accountData.dateBirth}
-                onChange={(e) => handleChangeData("dateBirth", e.target.value)}
+                value={accountData.date_birth}
+                onChange={(e) => handleChangeData("date_birth", e.target.value)}
               />
               <BasicInput
                 className="h-20"

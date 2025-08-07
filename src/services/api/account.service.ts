@@ -21,7 +21,7 @@ export interface AccountData {
   regional_council_number?: string;
   phone?: string;
   especiality?: string;
-  dateBirth?: string;
+  date_birth?: string;
   bio?: string;
   picture?: string;
   has_reset_pass: boolean;
@@ -43,7 +43,6 @@ class AccountService {
   static async getAccount(): Promise<AccountData> {
     try {
       const response = await api.get(AppRoutes.ACCOUNT);
-      console.log(response.data, "AAAAAAAAAAAAA")
       return response.data
     } catch {
       return {
@@ -55,7 +54,7 @@ class AccountService {
         regional_council_number: "",
         picture: undefined,
         especiality: "",
-        dateBirth: "",
+        date_birth: "",
         bio: "",
         has_reset_pass: false,
         has_verified_email: false,
@@ -83,7 +82,7 @@ class AccountService {
         regional_council_number: "",
         picture: undefined,
         especiality: "",
-        dateBirth: "",
+        date_birth: "",
         bio: "",
         has_reset_pass: false,
         has_verified_email: false,
