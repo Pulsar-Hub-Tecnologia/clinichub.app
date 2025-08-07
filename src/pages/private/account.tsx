@@ -40,12 +40,14 @@ const defaultAccountData: AccountData = {
 }
 
 export default function Account() {
-  const [accountData, setAccountData] = useState<AccountData>(defaultAccountData)
-  const [hasChanged, setHasChanged] = useState<boolean>(false)
-
   const { onLoading, offLoading } = useLoading()
   const { workspace } = useAuthAdmin()
   const { theme, setTheme } = useTheme()
+
+  const [accountData, setAccountData] = useState<AccountData>(defaultAccountData)
+  const [hasChanged, setHasChanged] = useState<boolean>(false)
+  const [isHybrid, setIsHibryd] = useState<boolean>(workspace?.role === "HYBRID")
+
 
   useEffect(() => {
     (async () => {
@@ -68,7 +70,8 @@ export default function Account() {
   const handleSaveData = async () => {
     try {
       onLoading()
-      await AccountService.updateAccount(accountData)
+      const updateAccount = await AccountService.updateAccount(accountData)
+      toast.success(updateAccount.message)
     } catch (error) {
       if (error instanceof AxiosError) {
         return toast.error(error.message || "Ops! Tivemos um erro ao atualizar seus dados!")
@@ -112,7 +115,7 @@ export default function Account() {
               {workspace?.type === "BUSINESS" && workspace.role !== "PROFESSIONAL" && (
                 <div className='flex items-center gap-2'>
                   <p>Sou profissional</p>
-                  <Switch checked={workspace.role === "HYBRID"} />
+                  <Switch checked={isHybrid} onCheckedChange={(checked) => setIsHibryd(checked)} />
                 </div>)
               }
             </CardHeader>
@@ -143,23 +146,6 @@ export default function Account() {
                 onChange={(e) => handleChangeData("phone", e.target.value)}
               />
               <BasicInput
-                label="CRM"
-                placeholder="Digite o seu CRM"
-                id="crm"
-                type="text"
-                maxLength={13}
-                value={accountData.regional_council_number}
-                onChange={(e) => handleChangeData("regional_council_number", e.target.value)}
-              />
-              <BasicInput
-                label="Especialidade"
-                placeholder="Digite o sua Especialidade"
-                id="especiality"
-                type="text"
-                value={accountData.especiality}
-                onChange={(e) => handleChangeData("especiality", e.target.value)}
-              />
-              <BasicInput
                 label="Data de Nascimento"
                 placeholder="Digite o sua Data de Nascimento"
                 id="dateBirth"
@@ -167,15 +153,37 @@ export default function Account() {
                 value={accountData.date_birth}
                 onChange={(e) => handleChangeData("date_birth", e.target.value)}
               />
-              <BasicInput
-                className="h-20"
-                label="Bio Profissional"
-                placeholder="Digite o sua Bio Prossional"
-                id="bio"
-                value={accountData.bio}
-                useTextArea={true}
-                onChange={(e) => handleChangeData("bio", e.target.value)}
-              />
+              {isHybrid && (
+                <>
+                  <BasicInput
+                    label="Número do Conselho Regional"
+                    placeholder="Digite o Número do Conselho Regional"
+                    id="crm"
+                    type="text"
+                    maxLength={13}
+                    value={accountData.regional_council_number}
+                    onChange={(e) => handleChangeData("regional_council_number", e.target.value)}
+                  />
+                  <BasicInput
+                    label="Especialidade"
+                    placeholder="Digite o sua Especialidade"
+                    id="especiality"
+                    type="text"
+                    value={accountData.especiality}
+                    onChange={(e) => handleChangeData("especiality", e.target.value)}
+                  />
+
+                  <BasicInput
+                    className="h-20"
+                    label="Bio Profissional"
+                    placeholder="Digite o sua Bio Prossional"
+                    id="bio"
+                    value={accountData.bio}
+                    useTextArea={true}
+                    onChange={(e) => handleChangeData("bio", e.target.value)}
+                  />
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -193,14 +201,14 @@ export default function Account() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Segurança da Conta</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 gap-2">
 
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
         <div className="lg:col-span-1">

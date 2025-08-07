@@ -24,7 +24,6 @@ class WorkspaceService {
   static async getWorkspace(): Promise<Partial<WorkspaceData>> {
     try {
       const response = await api.get(AppRoutes.WORKSPACE);
-      console.log(response, "DISGRAAÇÇÇAAAA")
       return response.data
     } catch {
       return {

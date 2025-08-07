@@ -195,15 +195,16 @@ export function wppConnected(status: string) {
 }
 
 export function formatarCEP(cep: string | null | undefined): string {
-  if (!cep) {
+  if (!cep || typeof cep !== 'string') {
     return '';
   }
 
-  const numerosCEP = cep.replace(/\D/g, '');
+  const apenasDigitos = cep.replace(/\D/g, '');
 
-  if (numerosCEP.length !== 8) {
-    return '';
+  if (apenasDigitos.length > 5) {
+
+    return apenasDigitos.slice(0, 5) + '-' + apenasDigitos.slice(5, 8);
   }
 
-  return `${numerosCEP.substring(0, 5)}-${numerosCEP.substring(5)}`;
+  return apenasDigitos;
 }

@@ -49,7 +49,7 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{activeWorkspace.type === "PERSONAL" ? "Meu Espaço" : activeWorkspace.name}</span>
-                <span className="truncate text-xs">{mapAccessLevel(activeWorkspace.role)}</span>
+                <span className="truncate text-xs">{mapAccessLevel(activeWorkspace.role, activeWorkspace.type)}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -79,7 +79,7 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
                 <div className="flex flex-col items-start">
                   {workspace.type === "PERSONAL" ? "Meu Espaço" : workspace.name}
                   <span className="text-xs text-muted-foreground">
-                    {mapAccessLevel(workspace.role)}
+                    {mapAccessLevel(workspace.role, workspace.type)}
                   </span>
 
                 </div>

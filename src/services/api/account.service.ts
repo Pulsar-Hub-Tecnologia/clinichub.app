@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { api } from '.';
 import { AppRoutes } from './config/enum';
 
@@ -68,31 +68,16 @@ class AccountService {
     }
   }
 
-  static async updateAccount(body: AccountData): Promise<AccountData> {
+  static async updateAccount(body: AccountData): Promise<{ message: string }> {
     try {
       const response = await api.put(AppRoutes.ACCOUNT, body);
       return response.data
-    } catch {
-      return {
-        id: "",
-        name: "",
-        email: "",
-        phone: "",
-        cpf: "",
-        regional_council_number: "",
-        picture: undefined,
-        especiality: "",
-        date_birth: "",
-        bio: "",
-        has_reset_pass: false,
-        has_verified_email: false,
-        password_hash: "",
-        reset_password_expires: undefined,
-        token_reset_password: undefined,
-        created_at: "",
-        updated_at: undefined,
-        deleted_at: undefined,
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return { message: error.message }
       }
+
+      return { message: "Ops! Tivemos um erro ao atualizar seus dados!" }
     }
   }
 

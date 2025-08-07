@@ -55,7 +55,7 @@ type NestedKeyOf<T> = {
 
 export default function WorkspaceSettings() {
   const [statesList, setStatesList] = useState<GetState[]>([])
-  const [workspaceData, setWorkspaceData] = useState<Partial<IWorkspaceData>>(defaultWorkspaceData)
+  const [workspaceData, setWorkspaceData] = useState<IWorkspaceData>(defaultWorkspaceData)
   const [hasChanged, setHasChanged] = useState<boolean>(false)
 
   const { onLoading, offLoading } = useLoading()
@@ -76,12 +76,12 @@ export default function WorkspaceSettings() {
 
         setStatesList(responseStates.value)
         setWorkspaceData({
-          name: responseWorkspace.value.name,
-          cnpj: responseWorkspace.value.cnpj,
-          email: responseWorkspace.value.email,
-          address: responseWorkspace.value.address,
-          phone: responseWorkspace.value.phone,
-          whatsapp: responseWorkspace.value.whatsapp,
+          ...defaultWorkspaceData,
+          ...responseWorkspace.value,
+          address: {
+            ...defaultWorkspaceData.address,
+            ...responseWorkspace.value.address
+          }
         })
       } catch (error) {
         if (error instanceof AxiosError) {
@@ -97,6 +97,7 @@ export default function WorkspaceSettings() {
     try {
       onLoading()
       await WorkspaceService.updateWorkspace(workspaceData)
+      toast.success("Dados atualizados com sucesso!")
     } catch (error) {
       if (error instanceof AxiosError) {
         return toast.error(error.message || "Ops! Tivemos um erro ao atualizar seus dados!")
@@ -112,18 +113,16 @@ export default function WorkspaceSettings() {
     setHasChanged(true);
     return setWorkspaceData((prev) => {
       const newPrev = { ...prev };
-      const [mainField, subField] = field.split('.');
+      const fields = field.split('.');
 
-      if (subField) {
-        // @ts-ignore
-        newPrev[mainField] = {
-          // @ts-ignore
-          ...newPrev[mainField],
-          [subField]: value,
-        };
+      if (fields.length > 1) {
+        let current: any = newPrev;
+        for (let i = 0; i < fields.length - 1; i++) {
+          current = current[fields[i]] = { ...current[fields[i]] };
+        }
+        current[fields[fields.length - 1]] = value;
       } else {
-        // @ts-ignore
-        newPrev[mainField] = value;
+        (newPrev as any)[field as keyof IWorkspaceData] = value;
       }
 
       return newPrev;
@@ -147,10 +146,10 @@ export default function WorkspaceSettings() {
     }
 
     const addressParts = [];
-    if (workspaceData.address?.street) {
+    if (workspaceData.address.street) {
       addressParts.push(workspaceData.address.street);
     }
-    if (workspaceData.address?.number) {
+    if (workspaceData.address.number) {
       addressParts.push(workspaceData.address.number);
     }
 
@@ -158,10 +157,10 @@ export default function WorkspaceSettings() {
       parts.push(addressParts.join(', '));
     }
 
-    if (workspaceData.address?.neighborhood) {
+    if (workspaceData.address.neighborhood) {
       parts.push(workspaceData.address.neighborhood);
     }
-    if (workspaceData.address?.city) {
+    if (workspaceData.address.city) {
       parts.push(workspaceData.address.city);
     }
 
@@ -205,23 +204,25 @@ export default function WorkspaceSettings() {
                 id="cnpj"
                 type="text"
                 value={formatCpfCnpj(workspaceData.cnpj)}
-                onChange={(e) => handleChangeData("cnpj", e.target.value)}
+                onChange={(e) => handleChangeData("cnpj", e.target.value.replace(/\D/g, ''))}
               />
               <BasicInput
                 label="Telefone Principal"
                 placeholder="Digite Telefone Principal"
                 id="phone"
                 type="tel"
+                maxLength={15}
                 value={formatPhone(workspaceData.phone)}
-                onChange={(e) => handleChangeData("phone", e.target.value)}
+                onChange={(e) => handleChangeData("phone", e.target.value.replace(/\D/g, ''))}
               />
               <BasicInput
                 label="WhatsApp"
                 placeholder="Digite WhatsApp"
                 id="whatsApp"
                 type="tel"
+                maxLength={15}
                 value={formatPhone(workspaceData.whatsapp)}
-                onChange={(e) => handleChangeData("whatsapp", e.target.value)}
+                onChange={(e) => handleChangeData("whatsapp", e.target.value.replace(/\D/g, ''))}
               />
               <BasicInput
                 label="E-mail"
@@ -244,15 +245,16 @@ export default function WorkspaceSettings() {
                 placeholder="01234-567"
                 id="cep"
                 type="text"
-                value={formatarCEP(workspaceData.address?.cep)}
-                onChange={(e) => handleChangeData("address.cep", e)}
+                value={formatarCEP(workspaceData.address.cep)}
+                maxLength={10}
+                onChange={(e) => handleChangeData("address.cep", e.target.value.replace(/\D/g, ''))}
               />
               <BasicInput
                 label="Número"
                 placeholder="123"
                 id="number"
                 type="text"
-                value={workspaceData.address?.number}
+                value={workspaceData.address.number}
                 onChange={(e) => handleChangeData("address.number", e.target.value)}
               />
               <BasicInput
@@ -260,7 +262,7 @@ export default function WorkspaceSettings() {
                 placeholder="Rua das Flores"
                 id="street"
                 type="text"
-                value={workspaceData.address?.street}
+                value={workspaceData.address.street}
                 onChange={(e) => handleChangeData("address.street", e.target.value)}
               />
               <BasicInput
@@ -268,7 +270,7 @@ export default function WorkspaceSettings() {
                 placeholder="Centro"
                 id="neighborhood"
                 type="text"
-                value={workspaceData.address?.neighborhood}
+                value={workspaceData.address.neighborhood}
                 onChange={(e) => handleChangeData("address.neighborhood", e.target.value)}
               />
               <BasicInput
@@ -276,12 +278,18 @@ export default function WorkspaceSettings() {
                 placeholder="São Paulo"
                 id="city"
                 type="text"
-                value={workspaceData.address?.city}
+                value={workspaceData.address.city}
                 onChange={(e) => handleChangeData("address.city", e.target.value)}
               />
               <div className="space-y-2">
                 <Label htmlFor="state">Estado</Label>
-                <Select defaultValue={workspaceData.address?.state.acronym} onValueChange={(e) => handleChangeData("address.state", { acronym: e, name: statesList.find(state => state.sigla === e)?.nome! })}>
+                <Select
+                  value={workspaceData.address.state?.acronym}
+                  onValueChange={(e) => handleChangeData("address.state", {
+                    acronym: e,
+                    name: statesList.find(state => state.sigla === e)?.nome || ''
+                  })}
+                >
                   <SelectTrigger id="state">
                     <SelectValue placeholder="Selecione o estado" />
                   </SelectTrigger>
@@ -292,14 +300,14 @@ export default function WorkspaceSettings() {
                   </SelectContent>
                 </Select>
               </div>
-              <BasicInput
+              {/* <BasicInput
                 label="Complemento"
                 placeholder="Sala, andar, etc."
                 id="complement"
                 type="text"
-
-                onChange={(e) => handleChangeData("name", e.target.value)}
-              />
+                value={workspaceData.address.complement || ''}
+                onChange={(e) => handleChangeData("address.complement", e.target.value)}
+              /> */}
             </CardContent>
           </Card>
           <Card>
@@ -312,24 +320,37 @@ export default function WorkspaceSettings() {
                   <h2>Permitir agendamento online</h2>
                   <p className="text-sm text-gray-500">Pacientes podem agendar consultas pelo sistema</p>
                 </div>
-                <Switch />
+                <Switch
+                  checked={workspaceData.appointmentOnline}
+                  onCheckedChange={(checked) => handleChangeData("appointmentOnline", checked)}
+                />
               </div>
               <div className='flex items-center justify-between w-full '>
                 <div>
                   <h2>Notificações por WhatsApp</h2>
                   <p className="text-sm text-gray-500">Enviar lembretes e confirmações via WhatsApp</p>
                 </div>
-                <Switch />
+                <Switch
+                  checked={workspaceData.whatsappNotification}
+                  onCheckedChange={(checked) => handleChangeData("whatsappNotification", checked)}
+                />
               </div>
               <div className='flex items-center justify-between w-full '>
                 <div>
                   <h2>Permitir que os pacientes se autocadastrem</h2>
                   <p className="text-sm text-gray-500">Os pacientes poderão se cadastrar por um link </p>
                 </div>
-                <Switch />
+                <Switch
+                  checked={workspaceData.selfRegister}
+                  onCheckedChange={(checked) => handleChangeData("selfRegister", checked)}
+                />
               </div>
 
-              <h2 className='text-primary font-semibold hover:underline cursor-pointer w-fit mt-5' onClick={copyRegisterLink}>Copiar link de cadastro</h2>
+              {workspaceData.selfRegister && (
+                <h2 className='text-primary font-semibold hover:underline cursor-pointer w-fit mt-5' onClick={copyRegisterLink}>
+                  Copiar link de cadastro
+                </h2>
+              )}
             </CardContent>
           </Card>
         </div>
