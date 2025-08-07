@@ -119,7 +119,7 @@ export default function Account() {
             <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <BasicInput
                 label="Nome Completo"
-                placeholder="Digite seu Nome"
+                placeholder="Digite seu Nome Completo"
                 id="clininName"
                 type="text"
                 value={accountData.name}
