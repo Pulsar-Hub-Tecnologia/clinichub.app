@@ -12,9 +12,9 @@ import { api } from '@/services/api';
 export interface Access {
   picture: string;
   workspace_id: string;
-  type: string;
+  type: "PERSONAL" | "BUSINESS";
   name: string;
-  role: string;
+  role: "ADMIN" | "OWNER" | "PROFESSIONAL" | "HYBRID";
 }
 
 interface AuthUser {
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: AuthProviderInterface) => {
     setUser(user);
     setAccesses(accesses);
     Cookies.set('clinic_token', token, { expires: 7 });
-    Cookies.set('clinic_auth', encryptData({accesses, user}), { expires: 7 });
+    Cookies.set('clinic_auth', encryptData({ accesses, user }), { expires: 7 });
   };
 
   const signInWithWorkspace = (token: string) => {

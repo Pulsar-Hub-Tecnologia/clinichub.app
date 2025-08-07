@@ -7,15 +7,16 @@ import { SidebarProvider } from '@/components/ui/sidebar.tsx';
 import { AppSidebar } from '@/components/app-sidebar/app-sidebar.tsx';
 import ForgotPassword from '@/pages/public/forgot-password.tsx';
 import RecoverPassword from '@/pages/public/recover-password.tsx';
-import Account from '@/pages/private/account.tsx';
 // import { useAuth } from '@/context/auth-context.tsx';
 import RegisterAccess from '@/pages/public/register-access.tsx';
 import RegisterInfo from '@/pages/public/register-info.tsx';
-import ValidateEmail from '@/pages/public/verify-email.tsx';
 import Dashboard from '@/pages/private/dashboard.tsx';
 import { Access, useAuthAdmin } from '@/context/auth-context.tsx';
 import Workspaces from '@/pages/private/workspaces.tsx';
 import VerifyEmail from '@/pages/public/verify-email.tsx';
+import ValidateEmail from '@/pages/public/validate-email.tsx';
+import Account from '@/pages/private/account.tsx';
+import WorkspaceSettings from '@/pages/private/settings/workspace.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -30,9 +31,14 @@ export const AppRoute = () => {
 
   const pagesAdmin = [
     {
-      path: '/configurations/profile',
+      path: '/profile',
       allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
       component: Account,
+    },
+    {
+      path: '/settings/workspace',
+      allowedRoles: ['ADMIN', 'OWNER', 'PROFESSIONAL', 'HYBRID'],
+      component: WorkspaceSettings,
     },
     {
       path: '/dashboard',
@@ -55,7 +61,7 @@ export const AppRoute = () => {
           <Route path={'/register-access'} element={<RegisterAccess />} />
           <Route path={'/register-info'} element={<RegisterInfo />} />
           <Route path={'/verify-email'} element={<VerifyEmail />} />
-          <Route path={'/validate-email'} element={<ValidateEmail />} />
+          <Route path={'/validate-email/:token/:email'} element={<ValidateEmail />} />
           <Route path={'/forgot-password'} element={<ForgotPassword />} />
           <Route path={'/recover/:token/:email'} element={<RecoverPassword />} />
           <Route path={'/*'} element={<Login />} />

@@ -23,6 +23,11 @@ class AuthService {
     return response;
   }
 
+  static async resendValidateEmail(email: string) {
+    const response = await api.post(AppRoutes.AUTH + "/resend-validate-email", { email });
+    return response;
+  }
+
   static async forgotPassword(email: string) {
     const response = await api.post(AppRoutes.AUTH + '/forgot-password/', {
       email,

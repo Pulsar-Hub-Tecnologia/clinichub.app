@@ -32,7 +32,8 @@ export default function ForgotPassword() {
     } else {
       await AuthService.forgotPassword(data).then((response) => {
       if (response.status === 200) {
-        navigate('/profile');
+        toast.success(response.data.message);
+        navigate('/login');
       }
     })
     .catch((error) => {

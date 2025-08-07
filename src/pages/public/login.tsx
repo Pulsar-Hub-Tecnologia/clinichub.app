@@ -72,7 +72,7 @@ export default function Login() {
             .then((response) => {
               signInWithWorkspace(response.data);
               signWorkspace(accesses[0]);
-              navigate('/dashboard');
+              navigate('/profile');
             })
             .catch((error) => {
               if (error instanceof AxiosError) {
@@ -83,7 +83,7 @@ export default function Login() {
               }
             });
         } else if (accesses.length > 1) {
-          navigate('/workspaces');
+          navigate('/settings/workspace');
         } else {
           toast.error('Você não possui acesso a nenhuma clínica.');
         }
