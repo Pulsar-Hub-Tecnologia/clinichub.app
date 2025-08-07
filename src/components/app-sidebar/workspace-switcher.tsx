@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -68,7 +67,7 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Workspaces
             </DropdownMenuLabel>
-            {accesses.map((workspace, index) => (
+            {accesses.map((workspace) => (
               <DropdownMenuItem
                 key={workspace.name}
                 onClick={() => setActiveTeam(workspace)}
@@ -87,7 +86,6 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
                 <span className="text-xs text-muted-foreground">
                   {mapAccessLevel(workspace.role)}
                 </span>
-                {/* <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut> */}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
