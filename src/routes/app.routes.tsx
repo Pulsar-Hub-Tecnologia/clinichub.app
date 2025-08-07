@@ -3,7 +3,7 @@ import Login from '@/pages/public/login.tsx';
 import PrivateRoute from './private.routes.tsx';
 import { useTheme } from '@/context/theme-context.tsx';
 import { ToastContainer } from 'react-toastify';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar.tsx';
+import { SidebarProvider } from '@/components/ui/sidebar.tsx';
 import { AppSidebar } from '@/components/app-sidebar/app-sidebar.tsx';
 import ForgotPassword from '@/pages/public/forgot-password.tsx';
 import RecoverPassword from '@/pages/public/recover-password.tsx';
