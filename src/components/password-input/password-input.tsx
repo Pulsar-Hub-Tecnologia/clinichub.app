@@ -100,9 +100,49 @@ const PasswordInput = ({ label, value, ...rest }: PasswordInputProps) => {
       </div>
 
       <div className="flex space-x-1 mt-2">
-        <div className={`h-1 flex-1 rounded-full ${passwordStrength.strengthLenght > 0 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-        <div className={`h-1 flex-1 rounded-full ${passwordStrength.strengthLenght > 2 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-        <div className={`h-1 flex-1 rounded-full ${passwordStrength.strengthLenght > 4 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+        <div
+          className={`h-1 flex-1 rounded-full ${
+        passwordStrength.strengthLenght === 0
+          ? 'bg-gray-300'
+          : passwordStrength.strengthLenght === 1
+          ? 'bg-red-500'
+          : passwordStrength.strengthLenght === 2
+          ? 'bg-orange-400'
+          : passwordStrength.strengthLenght === 3
+          ? 'bg-yellow-400'
+          : passwordStrength.strengthLenght === 4
+          ? 'bg-lime-400'
+          : passwordStrength.strengthLenght >= 5
+          ? 'bg-green-500'
+          : ''
+          }`}
+        ></div>
+        <div
+          className={`h-1 flex-1 rounded-full ${
+        passwordStrength.strengthLenght < 2
+          ? 'bg-gray-300'
+          : passwordStrength.strengthLenght === 2
+          ? 'bg-orange-400'
+          : passwordStrength.strengthLenght === 3
+          ? 'bg-yellow-400'
+          : passwordStrength.strengthLenght === 4
+          ? 'bg-lime-400'
+          : passwordStrength.strengthLenght >= 5
+          ? 'bg-green-500'
+          : ''
+          }`}
+        ></div>
+        <div
+          className={`h-1 flex-1 rounded-full ${
+        passwordStrength.strengthLenght < 4
+          ? 'bg-gray-300'
+          : passwordStrength.strengthLenght === 4
+          ? 'bg-lime-400'
+          : passwordStrength.strengthLenght >= 5
+          ? 'bg-green-500'
+          : ''
+          }`}
+        ></div>
       </div>
 
       <div className="flex flex-row gap-2 mt-1">

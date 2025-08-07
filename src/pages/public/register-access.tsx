@@ -16,6 +16,7 @@ import AnimatedComponent from '@/components/animated-component';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import AccountService from '@/services/api/account.service';
+import AuthBackground from '@/components/auth-background/auth-background';
 
 interface FormFields {
   userType: 'PERSONAL' | 'BUSINESS';
@@ -92,7 +93,6 @@ export default function RegisterAccess() {
   }, [formFields.email, password_valid, formFields.checkTerms]);
 
   const handleSubmit = async () => {
-    console.log(formFields, "FORM")
     try {
       const response = await AccountService.validateAccount({ field: "email", value: formFields.email });
 
@@ -111,132 +111,131 @@ export default function RegisterAccess() {
   };
 
   return (
-    <div className="flex w-full min-h-dvh">
-      <div className='flex flex-col justify-center w-full lg:w-1/3 px-6 py-4 lg:px-14 space-y-5 xl:space-y-4 2xl:space-y-6'>
-        <AnimatedComponent type='slide-from-left' delay={100} duration='duration-500'>
-          <section id='header' className='space-y-10'>
-            <div className='space-y-2'>
-              <div className="flex items-center space-x-2">
-                <img src={ClinicHubLogo} alt="ClinicHUB Logo" />
-                <span className="text-xl font-semibold">ClinicHUB</span>
+    <AuthBackground>
+        <div className="flex flex-col justify-center px-4 py-4 sm:px-4 sm:py-6 space-y-3">
+          <AnimatedComponent type='slide-from-left' delay={100} duration='duration-500'>
+            <section id='header' className='space-y-2'>
+              <div className='space-y-2'>
+                <div className="flex items-center space-x-2">
+                  <img src={ClinicHubLogo} alt="ClinicHUB Logo" className="h-10 w-10 rounded-lg" />
+                  <span className="text-2xl font-bold tracking-tight">ClinicHub</span>
+                </div>
+                <p className="text-xs text-muted-foreground">Sistema de Gestão em Saúde</p>
               </div>
-              <p className="text-sm">Sistema de Gestão em Saúde</p>
-            </div>
-            <div className='space-y-1'>
-              <h1 className="text-3xl font-bold">Criar sua conta</h1>
-              <p>Comece criando seu acesso</p>
-            </div>
-          </section>
-        </AnimatedComponent>
+              <div className='space-y-1'>
+                <h1 className="text-2xl sm:text-3xl font-bold">Criar sua conta</h1>
+                <p className="text-sm">Comece criando seu acesso</p>
+              </div>
+            </section>
+          </AnimatedComponent>
 
-        <AnimatedComponent type='slide-from-left' delay={100}>
-          <section id='progress' className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">1</div>
-              <span className="text-sm font-medium text-primary">Acesso</span>
-            </div>
-            <div className="w-full h-0.5 bg-gray-300"></div>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-bold">2</div>
-              <span className="text-sm">Informações</span>
-            </div>
-          </section>
-        </AnimatedComponent>
+          <AnimatedComponent type='slide-from-left' delay={100}>
+            <section id='progress' className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
+                <span className="text-xs font-medium text-primary">Acesso</span>
+              </div>
+              <div className="w-full h-0.5 bg-gray-300"></div>
+              <div className="flex items-center space-x-2">
+                <div className="w-7 h-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-bold">2</div>
+                <span className="text-xs">Informações</span>
+              </div>
+            </section>
+          </AnimatedComponent>
 
-        <AnimatedComponent type='slide-from-bottom' delay={200} duration='duration-700' className='space-y-5 xl:space-y-4 2xl:space-y-6'>
-          <section id="userTypeSelection" className="space-y-1">
-            <Label>Tipo de usuário</Label>
-            <div className="flex flex-col gap-2 2xl:flex-row 2xl:gap-4">
-              <Button
-                variant={'outline'}
-                className={cn("flex-1 h-24 flex flex-col items-center justify-center space-y-2 text-base", formFields.userType === "PERSONAL" && "border-primary bg-accent")}
-                onClick={() => handleFormFields("userType", "PERSONAL")}
+          <AnimatedComponent type='slide-from-bottom' delay={200} duration='duration-700' className='space-y-4'>
+            <section id="userTypeSelection" className="space-y-1">
+              <Label className="text-sm">Tipo de usuário</Label>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button
+                  variant={'outline'}
+                  className={cn(
+                    "flex-1 h-14 px-2 py-2 flex flex-col items-center justify-center space-y-1 text-xs",
+                    formFields.userType === "PERSONAL" && "border-primary bg-accent"
+                  )}
+                  onClick={() => handleFormFields("userType", "PERSONAL")}
+                >
+                  <img src={IndividualProfessional} alt="Profissional Individual" className="w-6 h-6" />
+                  <span>Profissional Individual</span>
+                </Button>
+                <Button
+                  variant={'outline'}
+                  className={cn(
+                    "flex-1 h-14 px-2 py-2 flex flex-col items-center justify-center space-y-1 text-xs",
+                    formFields.userType === "BUSINESS" && "border-primary bg-accent"
+                  )}
+                  onClick={() => handleFormFields("userType", "BUSINESS")}
+                >
+                  <img src={ClinicADM} alt="Administrador de Clínica" className="w-6 h-6" />
+                  <span>Administrador de Clínica</span>
+                </Button>
+              </div>
+            </section>
+
+            <section id="inputs" className='space-y-3'>
+              <BasicInput
+                label="E-mail"
+                leftIcon={
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                }
+                id="email"
+                type="email"
+                autoComplete='email'
+                placeholder="seu@email.com"
+                onChange={(e) => handleFormFields("email", e.target.value)}
+                value={formFields.email}
+              />
+
+              <PasswordInput
+                label="Senha"
+                value={formFields.password}
+                onChange={(e) => handleFormFields("password", e.target.value)}
+              />
+
+              <BasicInput
+                label="Confirmar senha"
+                value={formFields.confirmPassword}
+                placeholder="Confirme sua senha"
+                id="confirmPassword"
+                type="password"
+                onChange={(e) => handleFormFields("confirmPassword", e.target.value)}
+                leftIcon={
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                }
+                error={formFields.password !== formFields.confirmPassword && formFields.confirmPassword.length > 0 ? "As senhas não coincidem. Por favor, tente novamente." : undefined}
+              />
+            </section>
+
+            <section id='terms-check' className='flex space-x-2 items-center pt-2'>
+              <Checkbox
+                id="terms"
+                checked={formFields.checkTerms}
+                onClick={() => handleFormFields("checkTerms", !formFields.checkTerms)}
+              />
+              <Label
+                className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                <img src={IndividualProfessional} alt="Profissional Individual" />
-                <span>Profissional Individual</span>
-              </Button>
-              <Button
-                variant={'outline'}
-                className={cn("flex-1 h-24 flex flex-col items-center justify-center space-y-2 text-base", formFields.userType === "BUSINESS" && "border-primary bg-accent")}
-                onClick={() => handleFormFields("userType", "BUSINESS")}
-              >
-                <img src={ClinicADM} alt="Administrador de Clínica" />
-                <span>Administrador de Clínica</span>
-              </Button>
-            </div>
-          </section>
-
-          <section id="inputs" className='space-y-5'>
-            <BasicInput
-              label="E-mail"
-              leftIcon={
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              }
-              id="email"
-              type="email"
-              autoComplete='email'
-              placeholder="seu@email.com"
-              onChange={(e) => handleFormFields("email", e.target.value)}
-              value={formFields.email}
+                Concordo com os
+                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Termos de Uso</span> e
+                <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Política de Privacidade</span>
+              </Label>
+            </section>
+            <TermsModal
+              isOpen={openTerms}
+              onClose={() => setOpenTerms(false)}
+              onAccept={handleAcceptTerms}
             />
 
-            <PasswordInput
-              label="Senha"
-              value={formFields.password}
-              onChange={(e) => handleFormFields("password", e.target.value)}
-            />
-
-            <BasicInput
-              label="Confirmar senha"
-              value={formFields.confirmPassword}
-              placeholder="Confirme sua senha"
-              id="confirmPassword"
-              type="password"
-              onChange={(e) => handleFormFields("confirmPassword", e.target.value)}
-              leftIcon={
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              }
-              error={formFields.password !== formFields.confirmPassword && formFields.confirmPassword.length > 0 ? "As senhas não coincidem. Por favor, tente novamente." : undefined}
-            />
-          </section>
-
-          <section id='terms-check' className='flex space-x-2 items-center pt-4'>
-            <Checkbox
-              id="terms"
-              checked={formFields.checkTerms}
-              onClick={() => handleFormFields("checkTerms", !formFields.checkTerms)}
-            />
-            <Label
-              className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            <Button
+              className="w-full py-4 text-base font-semibold bg-primary hover:bg-primary-foreground text-white flex items-center justify-center space-x-2"
+              disabled={disabled_button}
+              onClick={handleSubmit}
             >
-              Concordo com os
-              <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Termos de Uso</span> e
-              <span className="text-primary hover:underline ml-1 cursor-pointer" onClick={() => setOpenTerms(true)}>Política de Privacidade</span>
-            </Label>
-          </section>
-          <TermsModal
-            isOpen={openTerms}
-            onClose={() => setOpenTerms(false)}
-            onAccept={handleAcceptTerms}
-          />
-
-          <Button
-            className="w-full py-6 text-lg font-semibold bg-primary hover:bg-primary-foreground text-white flex items-center justify-center space-x-2"
-            disabled={disabled_button}
-            onClick={handleSubmit}
-          >
-            Continuar
-            <ArrowRight className="h-5 w-5" />
-          </Button>
-        </AnimatedComponent>
-      </div>
-      <section id='bubbles' className='hidden lg:block lg:w-2/3 min-h-full bg-gradient-to-r from-primary to-primary-foreground relative'>
-        <div className="absolute bottom-1 left-[10%] w-6 h-6 rounded-full opacity-0 bg-white animate-bubble-float-1"></div>
-        <div className="absolute bottom-1 left-[30%] w-30 h-30 rounded-full opacity-0 bg-white animate-bubble-float-2"></div>
-        <div className="absolute bottom-1 left-[50%] w-7 h-7 rounded-full opacity-0 bg-white animate-bubble-float-3"></div>
-        <div className="absolute bottom-1 left-[70%] w-12 h-12 rounded-full opacity-0 bg-white animate-bubble-float-1 [animation-delay:3s]"></div>
-        <div className="absolute bottom-1 left-[90%] w-9 h-9 rounded-full opacity-0 bg-white animate-bubble-float-2 [animation-delay:1s]"></div>
-      </section>
-    </div>
+              Continuar
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </AnimatedComponent>
+        </div>
+    </AuthBackground>
   );
 }
