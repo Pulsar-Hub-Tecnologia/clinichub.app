@@ -20,6 +20,8 @@ import {
 import { Access, useAuthAdmin } from "@/context/auth-context"
 import { mapAccessLevel } from "@/constants/auth-constants"
 
+import ClinicHubLogo from "/logo.png"
+
 export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecionado: Access | undefined }) {
   const { accesses } = useAuthAdmin();
   const { isMobile } = useSidebar();
@@ -28,6 +30,8 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
   if (!activeWorkspace) {
     return null
   }
+
+  console.log(activeWorkspace.picture, "activeWorkspace.picture")
 
   return (
     <SidebarMenu>
@@ -39,20 +43,14 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="bg-background-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                {activeWorkspace.picture ? (
-                  <img
-                    src={activeWorkspace.picture}
-                    alt={activeWorkspace.name}
-                    className="size-3.5 shrink-0 rounded"
-                  />
-                ) : (
-                  <span className="size-3.5 shrink-0 rounded bg-muted flex items-center justify-center text-xs font-bold uppercase">
-                    {activeWorkspace.name.charAt(0)}
-                  </span>
-                )}
+                <img
+                  src={activeWorkspace.picture || ClinicHubLogo}
+                  alt={activeWorkspace.name || "logo"}
+                  className="size-8 shrink-0 rounded"
+                />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeWorkspace.name}</span>
+                <span className="truncate font-medium">{activeWorkspace.type === "PERSONAL" ? "Meu Espaço" : activeWorkspace.name}</span>
                 <span className="truncate text-xs">{mapAccessLevel(activeWorkspace.role)}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -73,19 +71,20 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
                 onClick={() => setActiveTeam(workspace)}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-md border">
-                  {workspace.picture && (
-                    <img
-                      src={workspace.picture}
-                      alt={workspace.name}
-                      className="size-3.5 shrink-0 rounded"
-                    />
-                  )}
+                <div className="flex items-center justify-center rounded-md">
+                  <img
+                    src={workspace.picture || ClinicHubLogo}
+                    alt={workspace.name}
+                    className="size-8 shrink-0 rounded"
+                  />
                 </div>
-                {workspace.name}
-                <span className="text-xs text-muted-foreground">
-                  {mapAccessLevel(workspace.role)}
-                </span>
+                <div className="flex flex-col items-start">
+                  {workspace.type === "PERSONAL" ? "Meu Espaço" : workspace.name}
+                  <span className="text-xs text-muted-foreground">
+                    {mapAccessLevel(workspace.role)}
+                  </span>
+
+                </div>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
