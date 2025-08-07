@@ -64,7 +64,7 @@ export const AppRoute = () => {
           <Route path={'/validate-email/:token/:email'} element={<ValidateEmail />} />
           <Route path={'/forgot-password'} element={<ForgotPassword />} />
           <Route path={'/recover/:token/:email'} element={<RecoverPassword />} />
-          {/* <Route path={'/*'} element={<Login />} /> */}
+          <Route path={'/*'} element={<Login />} />
 
           {access &&
             pagesAdmin
