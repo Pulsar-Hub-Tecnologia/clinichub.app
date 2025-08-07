@@ -46,7 +46,7 @@ export default function Account() {
 
   const [accountData, setAccountData] = useState<AccountData>(defaultAccountData)
   const [hasChanged, setHasChanged] = useState<boolean>(false)
-  const [isHybrid, setIsHibryd] = useState<boolean>(workspace?.role === "HYBRID")
+  const [isHybrid, setIsHibryd] = useState<boolean>(workspace?.role === "HYBRID" || workspace?.type === "PERSONAL")
 
 
   useEffect(() => {
