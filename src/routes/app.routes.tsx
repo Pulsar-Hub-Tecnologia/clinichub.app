@@ -3,7 +3,7 @@ import Login from '@/pages/public/login.tsx';
 import PrivateRoute from './private.routes.tsx';
 import { useTheme } from '@/context/theme-context.tsx';
 import { ToastContainer } from 'react-toastify';
-import { SidebarProvider } from '@/components/ui/sidebar.tsx';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar.tsx';
 import { AppSidebar } from '@/components/app-sidebar/app-sidebar.tsx';
 import ForgotPassword from '@/pages/public/forgot-password.tsx';
 import RecoverPassword from '@/pages/public/recover-password.tsx';
@@ -17,6 +17,7 @@ import VerifyEmail from '@/pages/public/verify-email.tsx';
 import ValidateEmail from '@/pages/public/validate-email.tsx';
 import Account from '@/pages/private/account.tsx';
 import WorkspaceSettings from '@/pages/private/settings/workspace.tsx';
+import SidebarHeader from '@/components/app-sidebar/app-sidebar-trigger.tsx';
 
 export const AppRoute = () => {
   const { theme } = useTheme();
@@ -79,8 +80,11 @@ export const AppRoute = () => {
                         <AppSidebar
                           side="left"
                           access={access}
-                        />
+                          />
+                        <div className='flex flex-col h-full w-full'>
+                       <SidebarHeader />
                         <e.component />
+                          </div>
                       </SidebarProvider>
                     </PrivateRoute>
                   }
@@ -98,7 +102,10 @@ export const AppRoute = () => {
                       <AppSidebar
                         side="left"
                       />
-                      <e.component />
+                        <div className='flex flex-col h-full w-full'>
+                       <SidebarHeader />
+                        <e.component />
+                          </div>
                     </SidebarProvider>
                   </PrivateRoute>
                 }
