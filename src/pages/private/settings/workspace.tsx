@@ -254,6 +254,7 @@ export default function WorkspaceSettings() {
                 placeholder="123"
                 id="number"
                 type="text"
+                maxLength={10}
                 value={workspaceData.address.number}
                 onChange={(e) => handleChangeData("address.number", e.target.value)}
               />
