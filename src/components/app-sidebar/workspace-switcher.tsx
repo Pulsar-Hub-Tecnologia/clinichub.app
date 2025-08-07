@@ -31,8 +31,6 @@ export function WorkspacesSwitcher({ workspaceSelecionado }: { workspaceSelecion
     return null
   }
 
-  console.log(activeWorkspace.picture, "activeWorkspace.picture")
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
